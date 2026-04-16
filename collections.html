@@ -73,7 +73,7 @@
   <!-- Card 1: Nitro Elite -->
   <div class="collection-card" onclick="window.location.href='running.html'">
     <div style="position:absolute;inset:0;background:#0A0A0A;"></div>
-    <div style="position:absolute;inset:0;background-image:url('./images/puma-savanna.png');background-size:cover;background-position:center;opacity:0.15;"></div>
+    <div style="position:absolute;inset:0;background-image:url('./images/running-shoe-side.png');background-size:cover;background-position:center;opacity:0.15;"></div>
     <div class="card-overlay" style="background:linear-gradient(to top,rgba(10,10,10,0.95) 0%,rgba(10,10,10,0.3) 100%);"></div>
     <div class="card-content">
       <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">01 — Performance</p>
@@ -86,7 +86,7 @@
   <!-- Card 2: Savanna Capsule -->
   <div class="collection-card" onclick="window.location.href='running.html'">
     <div style="position:absolute;inset:0;background:#3A2E1C;"></div>
-    <div style="position:absolute;inset:0;background-image:url('./images/savanna-landscape.png');background-size:cover;background-position:center;opacity:0.2;"></div>
+    <div style="position:absolute;inset:0;background-image:url('./images/cinematic-panorama.png');background-size:cover;background-position:center;opacity:0.2;"></div>
     <div class="card-overlay" style="background:linear-gradient(to top,rgba(58,46,28,0.95) 0%,rgba(58,46,28,0.3) 100%);"></div>
     <div class="card-content">
       <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#C4A35A] mb-4">02 — Heritage</p>
@@ -99,7 +99,7 @@
   <!-- Card 3: Essentials -->
   <div class="collection-card" onclick="window.location.href='men.html'">
     <div style="position:absolute;inset:0;background:#F5F5F5;"></div>
-    <div style="position:absolute;inset:0;background-image:url('./images/puma-jungle.png');background-size:cover;background-position:center;opacity:0.12;"></div>
+    <div style="position:absolute;inset:0;background-image:url('./images/shoe-closeup.png');background-size:cover;background-position:center;opacity:0.12;"></div>
     <div class="card-overlay" style="background:linear-gradient(to top,rgba(245,245,245,0.95) 0%,rgba(245,245,245,0.3) 100%);"></div>
     <div class="card-content">
       <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">03 — Everyday</p>
@@ -139,7 +139,7 @@
 <script>
 (function(){
 'use strict';
-const PRODUCTS={obsidian:{id:'obsidian',name:'Nitro Elite Speed',color:'Obsidian Black / Gold',price:14999,img:'./images/shoe_obsidian_black.png'},arctic:{id:'arctic',name:'Nitro Elite Speed',color:'Arctic White / Ice',price:14999,img:'./images/shoe_arctic_white.png'},savanna:{id:'savanna',name:'Nitro Elite Speed',color:'Savanna Gold / Earth',price:14999,img:'./images/shoe_savanna_gold.png'}};
+const PRODUCTS={obsidian:{id:'obsidian',name:'Nitro Elite Speed',color:'Obsidian Black / Gold',price:14999,img:'./images/shoe-obsidian.png'},arctic:{id:'arctic',name:'Nitro Elite Speed',color:'Arctic White / Ice',price:14999,img:'./images/shoe-arctic.png'},savanna:{id:'savanna',name:'Nitro Elite Speed',color:'Savanna Gold / Earth',price:14999,img:'./images/shoe-savanna.png'}};
 const SIZES=['UK 5','UK 6','UK 7','UK 8','UK 9','UK 10','UK 11','UK 12'];
 let cart=[],pendingProductId=null,selectedSize=null;
 const cartBadge=document.getElementById('cart-badge'),cartCount=document.getElementById('cart-count'),cartOverlay=document.getElementById('cart-overlay'),cartDrawer=document.getElementById('cart-drawer'),cartItemsEl=document.getElementById('cart-items'),cartEmpty=document.getElementById('cart-empty'),cartFooter=document.getElementById('cart-footer'),cartSubtotal=document.getElementById('cart-subtotal'),sizeOverlay=document.getElementById('size-overlay'),sizeSheet=document.getElementById('size-sheet'),sizeGrid=document.getElementById('size-grid'),sizeConfirm=document.getElementById('size-confirm'),searchOverlay=document.getElementById('search-overlay'),searchPanel=document.getElementById('search-panel'),searchInput=document.getElementById('search-input'),searchResults=document.getElementById('search-results');
