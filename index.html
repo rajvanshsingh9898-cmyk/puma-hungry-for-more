@@ -170,7 +170,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .announce-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.4); flex-shrink: 0; }
 
 /* ===== Hero Canvas ===== */
-#hero-canvas-section { height: 500vh; position: relative; }
+#hero-canvas-section { height: 300vh; position: relative; }
 #hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--section-dark); }
 #hero-canvas { width: 100%; height: 100%; display: block; }
 #hero-overlay {
@@ -1223,17 +1223,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   if (!prefersReducedMotion) {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero frame scrub
+    // Hero frame scrub – early frames fly past, puma section stays medium-speed
     const heroObj = { frame: 0 };
     gsap.to(heroObj, {
       frame: frameCount - 1,
       snap: 'frame',
-      ease: 'none',
+      ease: 'power2.in',
       scrollTrigger: {
         trigger: '#hero-canvas-section',
         start: 'top 36px',
         end: 'bottom bottom',
-        scrub: true
+        scrub: 0.6
       },
       onUpdate: function() {
         currentFrame = Math.round(heroObj.frame);
