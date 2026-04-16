@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUMA — Hungry For More | Nitro Elite Speed Series</title>
+<meta name="description" content="The puma doesn't train. It hunts. Nitro Elite Speed Series — the lightest carbon plate shoe PUMA has ever built.">
+
+<!-- Preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,400i&display=swap" rel="stylesheet">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        anton: ['Anton', 'sans-serif'],
+        satoshi: ['Satoshi', 'sans-serif'],
+        oswald: ['Oswald', 'sans-serif'],
+        cormorant: ['Cormorant Garamond', 'serif'],
+      }
+    }
+  }
+}
+</script>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --brand-green: #2D5A1B;
+  --brand-green-mid: #4A7C2F;
+  --brand-pale: #E8F0E4;
+  --text-primary: #0A0A0A;
+  --text-muted: #6B6B6B;
+  --text-faint: #ADADAD;
+  --section-dark: #0A0A0A;
+  --hairline: #E5E5E5;
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Satoshi', sans-serif; color: var(--text-primary); overflow-x: hidden; }
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* Focus visible */
+*:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 2px; }
+
+/* ===== Preloader ===== */
+#preloader {
+  position: fixed; inset: 0; z-index: 9999; background: #FFFFFF;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+  transition: opacity 500ms ease;
+}
+#preloader.fade-out { opacity: 0; }
+#preloader .logo-img { width: 120px; opacity: 0; animation: logoFadeIn 600ms ease 200ms forwards; }
+#preloader .load-bar-track { width: 240px; height: 2px; background: #F0F0F0; border-radius: 2px; overflow: hidden; }
+#preloader .load-bar-fill { width: 0; height: 100%; background: var(--brand-green); animation: loadBar 1000ms ease 400ms forwards; }
+#preloader .load-text {
+  font-family: 'Satoshi', sans-serif; font-size: 11px; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.14em; opacity: 0; animation: logoFadeIn 400ms ease 600ms forwards;
+}
+@keyframes logoFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes loadBar { from { width: 0; } to { width: 240px; } }
+
+/* ===== Grain Overlay ===== */
+#grain-overlay {
+  position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0.035;
+}
+
+/* ===== Pill Navbar ===== */
+#sticky-nav {
+  position: fixed; top: 20px; left: 50%;
+  transform: translateX(-50%) translateY(-60px);
+  width: calc(100% - 40px); max-width: 920px;
+  border-radius: 9999px; z-index: 50;
+  opacity: 0; pointer-events: none;
+  transition: all 380ms var(--ease-spring);
+}
+#sticky-nav.visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+#sticky-nav.glass {
+  background: rgba(8,8,8,0.6); backdrop-filter: blur(32px) saturate(1.8);
+  border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+#sticky-nav.glass.scrolled-far {
+  background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+}
+#sticky-nav.glass.scrolled-far #nav-logo-img { filter: brightness(0); }
+#sticky-nav.glass.scrolled-far .nav-link { color: #0A0A0A; }
+#sticky-nav.glass.scrolled-far .nav-icon { color: #0A0A0A; }
+#sticky-nav.glass.scrolled-far .nav-cta { background: #0A0A0A; color: #fff; }
+#sticky-nav.glass.scrolled-far #hamburger span { background: #0A0A0A; }
+
+.nav-link {
+  position: relative; font-family: 'Satoshi', sans-serif; font-weight: 500;
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff;
+  transition: color 300ms ease;
+}
+.nav-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 1.5px;
+  background: var(--brand-green); transform: scaleX(0); transition: transform 300ms var(--ease-spring);
+}
+.nav-link:nth-child(odd)::after { transform-origin: left; }
+.nav-link:nth-child(even)::after { transform-origin: right; }
+.nav-link:hover::after { transform: scaleX(1); }
+
+.nav-icon { color: #fff; transition: color 300ms ease; }
+.nav-cta {
+  font-family: 'Satoshi', sans-serif; font-weight: 500; font-size: 12px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: #0A0A0A;
+  background: #fff; padding: 8px 20px; border-radius: 9999px;
+  transition: all 250ms var(--ease-spring);
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+/* Hamburger */
+#hamburger { width: 32px; height: 32px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+#hamburger span { display: block; width: 22px; height: 1.5px; background: #fff; transition: all 300ms var(--ease-spring); }
+#hamburger.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+#hamburger.active span:nth-child(2) { opacity: 0; }
+#hamburger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile Nav Overlay */
+#mobile-nav-overlay {
+  position: fixed; inset: 0; z-index: 90; background: var(--brand-green);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+  transform: translateY(-100%); transition: transform 500ms var(--ease-spring);
+}
+#mobile-nav-overlay.open { transform: translateY(0); }
+.mobile-nav-link {
+  font-family: 'Anton', sans-serif; font-size: 48px; color: #fff; text-transform: uppercase;
+  opacity: 0; transform: translateY(20px); transition: all 400ms var(--ease-spring);
+}
+#mobile-nav-overlay.open .mobile-nav-link { opacity: 1; transform: translateY(0); }
+#mobile-nav-overlay.open .mobile-nav-link:nth-child(1) { transition-delay: 100ms; }
+#mobile-nav-overlay.open .mobile-nav-link:nth-child(2) { transition-delay: 150ms; }
+#mobile-nav-overlay.open .mobile-nav-link:nth-child(3) { transition-delay: 200ms; }
+#mobile-nav-overlay.open .mobile-nav-link:nth-child(4) { transition-delay: 250ms; }
+#mobile-nav-overlay.open .mobile-nav-link:nth-child(5) { transition-delay: 300ms; }
+
+/* ===== Announce Bar ===== */
+#announce-bar { height: 36px; background: var(--section-dark); overflow: hidden; display: flex; align-items: center; }
+.announce-track {
+  display: flex; white-space: nowrap;
+  animation: announceTicker 30s linear infinite;
+}
+.announce-track:hover { animation-play-state: paused; }
+@keyframes announceTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.announce-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Satoshi', sans-serif; font-size: 11px; color: #fff;
+  letter-spacing: 0.06em; padding: 0 16px;
+}
+.announce-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.4); flex-shrink: 0; }
+
+/* ===== Hero Canvas ===== */
+#hero-canvas-section { height: 500vh; position: relative; }
+#hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--section-dark); }
+#hero-canvas { width: 100%; height: 100%; display: block; }
+#hero-overlay {
+  position: absolute; inset: 0; pointer-events: none;
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 42vh;
+}
+#hero-text {
+  width: 100%; display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 3vw;
+}
+.hero-word {
+  font-family: 'Anton', sans-serif; font-size: clamp(40px, 8.5vw, 140px);
+  color: #fff; text-transform: uppercase; letter-spacing: 0.04em; line-height: 0.9;
+  text-shadow: 0 4px 32px rgba(0,0,0,0.35);
+  opacity: 0; transform: translateY(30px);
+  transition: all 600ms var(--ease-spring);
+}
+.hero-word.visible { opacity: 1; transform: translateY(0); }
+.hero-word-right { display: flex; flex-direction: column; align-items: flex-end; }
+#hero-brand-label {
+  position: absolute; bottom: 40px; left: 3vw;
+  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: #fff;
+  background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+  padding: 8px 18px; border-radius: 9999px; border: 1px solid rgba(255,255,255,0.15);
+  opacity: 0; transition: opacity 600ms ease;
+}
+#hero-brand-label.visible { opacity: 1; }
+#hero-speed-stat {
+  position: absolute; top: 60px; right: 3vw;
+  font-family: 'Satoshi', sans-serif; font-size: 12px; color: rgba(255,255,255,0.7);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  opacity: 0; transition: opacity 600ms ease;
+}
+#hero-speed-stat.visible { opacity: 1; }
+
+/* ===== Manifesto Ticker ===== */
+#manifesto-ticker { background: var(--brand-green); height: 56px; overflow: hidden; display: flex; align-items: center; }
+.manifesto-track { display: flex; white-space: nowrap; animation: marquee 28s linear infinite; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
+.manifesto-item {
+  font-family: 'Anton', sans-serif; font-size: 12px; color: #fff;
+  letter-spacing: 0.14em; text-transform: uppercase; padding: 0 24px;
+}
+
+/* ===== Section Utilities ===== */
+.section-pad { padding: clamp(100px, 12vw, 180px) 0; }
+.premium-divider { width: 48px; height: 1px; background: linear-gradient(90deg, var(--brand-green) 0%, transparent 100%); margin-bottom: 24px; }
+.btn-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9999px; font-family: 'Satoshi', sans-serif; font-weight: 500;
+  font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 14px 32px; transition: all 250ms var(--ease-spring);
+}
+.btn-pill:hover { transform: translateY(-1px); }
+.btn-pill-dark { background: var(--section-dark); color: #fff; }
+.btn-pill-dark:hover { background: #1a1a1a; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.btn-pill-outline { border: 1px solid var(--hairline); color: var(--text-primary); background: transparent; }
+.btn-pill-outline:hover { border-color: #ccc; }
+.btn-pill-green { background: var(--brand-green); color: #fff; }
+.btn-pill-green:hover { background: var(--brand-green-mid); box-shadow: 0 4px 20px rgba(45,90,27,0.3); }
+.btn-pill-green-outline { border: 1px solid var(--brand-green); color: var(--brand-green); background: transparent; }
+.btn-pill-green-outline:hover { background: var(--brand-green); color: #fff; }
+
+/* ===== Product Cards ===== */
+.product-card { position: relative; overflow: hidden; background: #fff; }
+.product-card .card-img-area {
+  height: 58vh; min-height: 340px; background: #F5F5F5;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.product-card .card-img-area img {
+  width: 70%; transition: transform 500ms var(--ease-spring);
+}
+.product-card:hover .card-img-area img { transform: scale(1.06); }
+.product-card .card-info { padding: 28px; border-top: 1px solid var(--hairline); }
+.product-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+  background: var(--brand-green); transform: scaleX(0); transform-origin: left;
+  transition: transform 400ms var(--ease-spring);
+}
+.product-card:hover::after { transform: scaleX(1); }
+
+/* ===== Benefits ===== */
+.benefit-card { text-align: center; padding: 40px 24px; }
+.benefit-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--brand-pale);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+}
+.benefit-icon svg { width: 28px; height: 28px; color: var(--brand-green); }
+
+/* ===== Athlete Carousel ===== */
+#athlete-carousel {
+  display: flex; gap: 2px; overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+#athlete-carousel::-webkit-scrollbar { display: none; }
+.athlete-card {
+  width: 360px; height: 480px; flex-shrink: 0; scroll-snap-align: start;
+  position: relative; overflow: hidden; border-radius: 4px;
+  background-size: cover; background-position: center;
+}
+.athlete-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%);
+}
+.athlete-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; z-index: 2; }
+.athlete-pr {
+  position: absolute; bottom: 24px; right: 24px; z-index: 2;
+  background: var(--brand-green); color: #fff; border-radius: 9999px;
+  font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 15px;
+  padding: 8px 16px;
+}
+
+/* ===== Essentials ===== */
+.essentials-card {
+  position: relative; overflow: hidden; border-radius: 4px;
+  background-size: cover; background-position: center;
+}
+.essentials-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+}
+.essentials-card .card-shoe {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(1.15);
+  width: 60%; z-index: 1; transition: transform 500ms var(--ease-spring);
+}
+.essentials-card:hover .card-shoe { transform: translate(-50%,-56%) scale(1.08); }
+.essentials-card .card-bottom { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; z-index: 2; }
+
+/* ===== Sustainability Counters ===== */
+.counter-val {
+  font-family: 'Anton', sans-serif; font-size: clamp(36px, 5vw, 56px); color: #fff;
+}
+
+/* ===== Cart System ===== */
+#cart-overlay, #size-overlay, #search-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(5px);
+  z-index: 9000; opacity: 0; pointer-events: none; transition: opacity 300ms ease;
+}
+#cart-overlay.open, #size-overlay.open, #search-overlay.open { opacity: 1; pointer-events: all; }
+
+#cart-drawer {
+  position: fixed; top: 0; right: 0; height: 100dvh; width: min(440px, 100vw);
+  background: #0C0C0C; z-index: 9100; transform: translateX(100%);
+  transition: transform 380ms var(--ease-spring);
+  border-left: 1px solid rgba(255,255,255,0.06);
+  display: flex; flex-direction: column;
+}
+#cart-drawer.open { transform: translateX(0); }
+#cart-drawer .cart-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+#cart-items {
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+#cart-items::-webkit-scrollbar { width: 3px; }
+#cart-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+#cart-footer {
+  padding: 20px 24px; border-top: 1px solid rgba(255,255,255,0.06);
+}
+.cart-item {
+  display: flex; gap: 16px; padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.cart-item-img { width: 84px; height: 84px; background: #1A1A1A; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+.cart-item-img img { width: 100%; height: 100%; object-fit: contain; }
+.qty-btn {
+  width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: all 200ms ease;
+}
+.qty-btn:hover { background: var(--brand-green); border-color: var(--brand-green); }
+
+/* Cart empty state */
+#cart-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 16px; padding: 40px; }
+
+/* Size Sheet */
+#size-sheet {
+  position: fixed; bottom: 0; left: 50%; width: min(520px, 100vw);
+  transform: translateX(-50%) translateY(110%); z-index: 9200;
+  background: #0C0C0C; border-radius: 20px 20px 0 0;
+  border: 1px solid rgba(255,255,255,0.07); border-bottom: none;
+  padding: 28px 28px 36px; transition: transform 380ms var(--ease-spring);
+}
+#size-sheet.open { transform: translateX(-50%) translateY(0); }
+.size-btn {
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+  color: #fff; font-family: 'Satoshi', sans-serif; font-size: 13px;
+  padding: 12px; text-align: center; transition: all 200ms ease;
+}
+.size-btn:hover { border-color: rgba(255,255,255,0.3); }
+.size-btn.selected { background: var(--brand-green); border-color: var(--brand-green); }
+
+/* Search Panel */
+#search-panel {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9100;
+  background: #0C0C0C; transform: translateY(-100%);
+  transition: transform 380ms var(--ease-spring);
+  padding: 32px; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+#search-panel.open { transform: translateY(0); }
+#search-input {
+  font-family: 'Anton', sans-serif; font-size: clamp(24px, 4vw, 44px);
+  text-transform: uppercase; background: transparent; border: none;
+  border-bottom: 1.5px solid rgba(255,255,255,0.15); color: #fff;
+  width: 100%; padding: 12px 0; outline: none;
+  transition: border-color 300ms ease;
+}
+#search-input:focus { border-color: var(--brand-green); }
+#search-input::placeholder { color: rgba(255,255,255,0.25); }
+.search-result-card {
+  display: flex; align-items: center; gap: 16px; padding: 16px;
+  background: #1A1A1A; border-radius: 8px; cursor: pointer;
+  transition: background 200ms ease;
+}
+.search-result-card:hover { background: #222; }
+
+/* ===== Scrollbar hiding for marquees ===== */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ===== Image fallback ===== */
+.img-fallback {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  background: #F5F5F5; color: var(--text-muted); font-family: 'Satoshi', sans-serif;
+  font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== PRELOADER ===== -->
+<div id="preloader" role="status" aria-label="Loading">
+  <img src="./assets/puma-logo-png-26.webp" alt="PUMA" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <span style="display:none;font-family:'Anton',sans-serif;font-size:32px;letter-spacing:0.06em;">PUMA</span>
+  <div class="load-bar-track"><div class="load-bar-fill"></div></div>
+  <span class="load-text">Loading Experience</span>
+</div>
+
+<!-- ===== SVG GRAIN OVERLAY ===== -->
+<svg id="grain-overlay" width="100%" height="100%">
+  <filter id="grain-filter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grain-filter)"/>
+</svg>
+
+<!-- ===== FLOATING PILL NAVBAR ===== -->
+<nav id="sticky-nav" class="glass" role="navigation" aria-label="Main navigation">
+  <div class="flex items-center justify-between h-[52px] md:h-[58px] px-5 md:px-7">
+    <!-- Logo -->
+    <a href="index.html" class="flex-shrink-0">
+      <img id="nav-logo-img" src="./assets/puma-logo-png-26.webp" alt="PUMA Home" class="h-[32px] md:h-[36px] brightness-0 invert"
+           onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-family:Anton,sans-serif;font-size:22px;color:#fff;letter-spacing:0.06em\' class=\'nav-logo-text\'>PUMA</span>';">
+    </a>
+    <!-- Desktop Links -->
+    <div class="hidden lg:flex items-center gap-8">
+      <a href="men.html" class="nav-link">Men</a>
+      <a href="women.html" class="nav-link">Women</a>
+      <a href="running.html" class="nav-link">Running</a>
+      <a href="collections.html" class="nav-link">Collections</a>
+      <a href="stories.html" class="nav-link">Stories</a>
+    </div>
+    <!-- Desktop Right -->
+    <div class="hidden md:flex items-center gap-4">
+      <button id="search-btn" class="nav-icon" aria-label="Search">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      <button id="cart-btn" class="nav-icon relative" aria-label="Shopping bag">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+        <span id="cart-badge" style="display:none" class="absolute -top-1 -right-1 w-[18px] h-[18px] bg-[#2D5A1B] rounded-full text-white text-[10px] font-satoshi font-bold items-center justify-center">0</span>
+      </button>
+      <a href="#product-grid" class="nav-cta">Shop Now</a>
+    </div>
+    <!-- Mobile Hamburger -->
+    <button id="hamburger" class="md:hidden" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ===== MOBILE NAV OVERLAY ===== -->
+<div id="mobile-nav-overlay" aria-hidden="true">
+  <a href="men.html" class="mobile-nav-link">Men</a>
+  <a href="women.html" class="mobile-nav-link">Women</a>
+  <a href="running.html" class="mobile-nav-link">Running</a>
+  <a href="collections.html" class="mobile-nav-link">Collections</a>
+  <a href="stories.html" class="mobile-nav-link">Stories</a>
+</div>
+
+<!-- ===== ANNOUNCE BAR ===== -->
+<div id="announce-bar" aria-label="Announcements">
+  <div class="announce-track">
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      FREE NEXT-DAY DELIVERY ON ORDERS ABOVE ₹3,499
+    </div><span class="announce-dot"></span>
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+      30-DAY HASSLE-FREE RETURNS
+    </div><span class="announce-dot"></span>
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      100% SATISFACTION GUARANTEE
+    </div><span class="announce-dot"></span>
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      SECURE CHECKOUT · 256-BIT ENCRYPTION
+    </div><span class="announce-dot"></span>
+    <!-- Duplicate for seamless loop -->
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      FREE NEXT-DAY DELIVERY ON ORDERS ABOVE ₹3,499
+    </div><span class="announce-dot"></span>
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+      30-DAY HASSLE-FREE RETURNS
+    </div><span class="announce-dot"></span>
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      100% SATISFACTION GUARANTEE
+    </div><span class="announce-dot"></span>
+    <div class="announce-item">
+      <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      SECURE CHECKOUT · 256-BIT ENCRYPTION
+    </div><span class="announce-dot"></span>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div id="main-content" style="opacity:0">
+
+<!-- ===== 5. HERO CANVAS SECTION ===== -->
+<section id="hero-canvas-section">
+  <div id="hero-sticky">
+    <canvas id="hero-canvas"></canvas>
+    <div id="hero-overlay">
+      <div id="hero-text">
+        <span class="hero-word">Hungry</span>
+        <div class="hero-word-right">
+          <span class="hero-word">For</span>
+          <span class="hero-word">More</span>
+        </div>
+      </div>
+    </div>
+    <div id="hero-brand-label">NITRO ELITE SERIES</div>
+    <div id="hero-speed-stat">0–60 IN 3 STRIDES</div>
+  </div>
+</section>
+
+<!-- ===== 6. MANIFESTO TICKER ===== -->
+<div id="manifesto-ticker" aria-label="Brand manifesto" aria-hidden="true">
+  <div class="manifesto-track">
+    <span class="manifesto-item">HUNGRY FOR MORE</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">BORN TO SPRINT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">NEVER CAGED</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">BUILT FOR THE HUNT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">MOVE LIKE INSTINCT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">THE SAVANNA IS YOUR TRACK</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">HUNGRY FOR MORE</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">BORN TO SPRINT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">NEVER CAGED</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">BUILT FOR THE HUNT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">MOVE LIKE INSTINCT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">THE SAVANNA IS YOUR TRACK</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">HUNGRY FOR MORE</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">BORN TO SPRINT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">NEVER CAGED</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">BUILT FOR THE HUNT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">MOVE LIKE INSTINCT</span><span class="manifesto-item">·</span>
+    <span class="manifesto-item">THE SAVANNA IS YOUR TRACK</span><span class="manifesto-item">·</span>
+  </div>
+</div>
+
+<!-- ===== 7. PRODUCT INTRO ===== -->
+<section id="product-intro" class="bg-white" style="padding: clamp(80px, 10vw, 140px) 0;">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 lg:flex lg:items-center lg:gap-16">
+    <!-- Left -->
+    <div class="lg:w-[55%] mb-12 lg:mb-0">
+      <span class="inline-block font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#2D5A1B] bg-[#E8F0E4] px-4 py-2 rounded-full mb-8">New Arrival — Spring 2026</span>
+      <h1 style="font-family:'Anton',sans-serif; font-size:clamp(56px,9vw,120px); line-height:0.9; letter-spacing:0.02em; text-transform:uppercase; margin-bottom:32px;">
+        <span class="word inline-block">Nitro</span> <span class="word inline-block">Elite</span> <span class="word inline-block">/</span><br>
+        <span class="word inline-block">Speed</span> <span class="word inline-block">Series</span>
+      </h1>
+      <p class="font-satoshi text-[17px] text-[#6B6B6B] leading-[1.7] max-w-[48ch] mb-10">Engineered from 11 years of biomechanics research. The lightest carbon plate shoe Puma has ever built.</p>
+      <div class="flex flex-wrap gap-4 mb-8">
+        <a href="#product-grid" class="btn-pill btn-pill-dark">Shop Now</a>
+        <a href="#benefits-section" class="btn-pill btn-pill-outline">Learn More</a>
+      </div>
+      <p class="font-satoshi text-[11px] text-[#ADADAD]">Free delivery on orders above ₹3,499 · 30-day returns</p>
+    </div>
+    <!-- Right -->
+    <div class="lg:w-[45%] relative flex items-center justify-center">
+      <div class="absolute inset-0" style="background: radial-gradient(ellipse at 60% 50%, #E8F0E4 0%, transparent 68%);"></div>
+      <img src="./images/shoe_obsidian_black.png" alt="Nitro Elite Speed Series - Obsidian Black" class="relative z-[1] w-full max-w-[520px]" style="filter: drop-shadow(0 40px 80px rgba(0,0,0,0.18)); transform: rotate(-6deg) translateY(-12px);"
+           onerror="this.outerHTML='<div class=\'img-fallback relative z-[1]\' style=\'width:520px;height:400px;\'>NITRO ELITE SPEED</div>';">
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. PRODUCT SHOWCASE GRID ===== -->
+<section id="product-grid" class="bg-white">
+  <div class="grid grid-cols-1 md:grid-cols-3" style="gap:2px;">
+    <!-- Card 1: Obsidian Black -->
+    <article class="product-card">
+      <div class="card-img-area">
+        <img src="./images/shoe_obsidian_black.png" alt="Nitro Elite Speed – Obsidian Black" onerror="this.outerHTML='<div class=\'img-fallback\'>OBSIDIAN BLACK</div>';">
+      </div>
+      <div class="card-info">
+        <p class="font-oswald text-[10px] tracking-[0.18em] uppercase text-[#2D5A1B] mb-2">Running · Carbon Plate</p>
+        <h3 class="font-satoshi font-bold text-[19px] text-[#0A0A0A] mb-1">Nitro Elite Speed</h3>
+        <p class="font-satoshi text-[13px] text-[#6B6B6B] mb-4">Obsidian Black / Gold</p>
+        <div class="flex items-center justify-between">
+          <span class="font-oswald font-bold text-[22px]">₹14,999</span>
+          <button class="add-to-cart-btn btn-pill btn-pill-outline text-[11px] py-2 px-5" data-product-id="obsidian">Add</button>
+        </div>
+      </div>
+    </article>
+    <!-- Card 2: Arctic White -->
+    <article class="product-card">
+      <div class="card-img-area">
+        <img src="./images/shoe_arctic_white.png" alt="Nitro Elite Speed – Arctic White" onerror="this.outerHTML='<div class=\'img-fallback\'>ARCTIC WHITE</div>';">
+      </div>
+      <div class="card-info">
+        <p class="font-oswald text-[10px] tracking-[0.18em] uppercase text-[#2D5A1B] mb-2">Running · Carbon Plate</p>
+        <h3 class="font-satoshi font-bold text-[19px] text-[#0A0A0A] mb-1">Nitro Elite Speed</h3>
+        <p class="font-satoshi text-[13px] text-[#6B6B6B] mb-4">Arctic White / Ice</p>
+        <div class="flex items-center justify-between">
+          <span class="font-oswald font-bold text-[22px]">₹14,999</span>
+          <button class="add-to-cart-btn btn-pill btn-pill-outline text-[11px] py-2 px-5" data-product-id="arctic">Add</button>
+        </div>
+      </div>
+    </article>
+    <!-- Card 3: Savanna Gold -->
+    <article class="product-card">
+      <div class="card-img-area">
+        <img src="./images/shoe_savanna_gold.png" alt="Nitro Elite Speed – Savanna Gold" onerror="this.outerHTML='<div class=\'img-fallback\'>SAVANNA GOLD</div>';">
+      </div>
+      <div class="card-info">
+        <p class="font-oswald text-[10px] tracking-[0.18em] uppercase text-[#2D5A1B] mb-2">Running · Carbon Plate</p>
+        <h3 class="font-satoshi font-bold text-[19px] text-[#0A0A0A] mb-1">Nitro Elite Speed</h3>
+        <p class="font-satoshi text-[13px] text-[#6B6B6B] mb-4">Savanna Gold / Earth</p>
+        <div class="flex items-center justify-between">
+          <span class="font-oswald font-bold text-[22px]">₹14,999</span>
+          <button class="add-to-cart-btn btn-pill btn-pill-outline text-[11px] py-2 px-5" data-product-id="savanna">Add</button>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ===== 9. BENEFITS SECTION ===== -->
+<section id="benefits-section" class="bg-white section-pad">
+  <div class="max-w-[1200px] mx-auto px-6 md:px-10">
+    <!-- Section Head -->
+    <div class="text-center mb-16">
+      <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">Why Nitro Elite</p>
+      <h2 style="font-family:'Anton',sans-serif; font-size:clamp(40px,6vw,72px); line-height:0.95; text-transform:uppercase;">Engineered To Win.</h2>
+    </div>
+    <!-- 4 Benefits -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        </div>
+        <h4 class="font-satoshi font-bold text-[17px] mb-3">Full-Length Carbon Plate</h4>
+        <p class="font-satoshi text-[14px] text-[#6B6B6B] leading-[1.6]">Propulsive energy transfer across the entire foot. Maximum forward drive.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4 class="font-satoshi font-bold text-[17px] mb-3">176g Ultra-Light</h4>
+        <p class="font-satoshi text-[14px] text-[#6B6B6B] leading-[1.6]">The lightest carbon plate shoe PUMA has ever made. Every gram optimised.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="10" stroke-dasharray="2 3"/></svg>
+        </div>
+        <h4 class="font-satoshi font-bold text-[17px] mb-3">NITRO™ Elite Foam</h4>
+        <p class="font-satoshi text-[14px] text-[#6B6B6B] leading-[1.6]">87% energy return. Nitrogen-infused foam that defies compression fatigue.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 18s3-4 5-4 3 2 5 2 3-6 5-6 5 4 5 4"/><path d="M2 12s3-4 5-4 3 2 5 2 3-6 5-6 5 4 5 4"/></svg>
+        </div>
+        <h4 class="font-satoshi font-bold text-[17px] mb-3">PWRTAPE Lockdown</h4>
+        <p class="font-satoshi text-[14px] text-[#6B6B6B] leading-[1.6]">Zero-slip lockdown. Adaptive upper that moves with your foot.</p>
+      </div>
+    </div>
+    <!-- Trust Strip -->
+    <div class="max-w-[900px] mx-auto">
+      <div class="flex flex-col sm:flex-row items-center justify-center border border-[#E5E5E5] rounded-full overflow-hidden">
+        <div class="flex items-center gap-3 px-8 py-4 sm:border-r border-[#E5E5E5]">
+          <svg width="18" height="18" fill="none" stroke="#2D5A1B" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          <span class="font-satoshi font-medium text-[12px] uppercase tracking-[0.14em]">30-Day Free Returns</span>
+        </div>
+        <div class="flex items-center gap-3 px-8 py-4 sm:border-r border-[#E5E5E5]">
+          <svg width="18" height="18" fill="none" stroke="#2D5A1B" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span class="font-satoshi font-medium text-[12px] uppercase tracking-[0.14em]">Free Next-Day Delivery</span>
+        </div>
+        <div class="flex items-center gap-3 px-8 py-4">
+          <svg width="18" height="18" fill="none" stroke="#2D5A1B" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span class="font-satoshi font-medium text-[12px] uppercase tracking-[0.14em]">Secure Checkout</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10. ATHLETE TRUST TICKER ===== -->
+<div id="athlete-ticker" style="height:44px; background:#0A0A0A; border-top:1px solid rgba(255,255,255,0.06); border-bottom:1px solid rgba(255,255,255,0.06); overflow:hidden; display:flex; align-items:center;" aria-hidden="true">
+  <div class="manifesto-track" style="animation-duration:35s;">
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> WORN BY OLYMPIC GOLD MEDALISTS</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> TRUSTED BY 50+ WORLD-CLASS ATHLETES</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> #1 CARBON PLATE IN MARATHON PODIUMS 2025</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> "THE FASTEST SHOE I'VE EVER RACED IN" — LINA CHEBET</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> 11 YEARS OF BIOMECHANICS R&amp;D</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> WORN BY OLYMPIC GOLD MEDALISTS</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> TRUSTED BY 50+ WORLD-CLASS ATHLETES</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> #1 CARBON PLATE IN MARATHON PODIUMS 2025</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> "THE FASTEST SHOE I'VE EVER RACED IN" — LINA CHEBET</span>
+    <span class="manifesto-item" style="font-family:'Satoshi',sans-serif; font-size:11px; font-weight:500;"><span style="color:#2D5A1B; margin-right:8px;">★</span> 11 YEARS OF BIOMECHANICS R&amp;D</span>
+  </div>
+</div>
+
+<!-- ===== 11. FOREST VISUAL BREAK ===== -->
+<section id="forest-section" style="height:100vh; position:relative; overflow:hidden;">
+  <div id="forest-bg" style="position:absolute; inset:0; height:120%; background-image:url('./images/puma-savanna.png'); background-size:cover; background-position:center 30%;"></div>
+  <!-- Fallback gradient if image missing -->
+  <div style="position:absolute; inset:0; height:120%; background: linear-gradient(135deg, #1a2e12 0%, #2d4a1f 30%, #1a3312 60%, #0a1a06 100%); z-index:0;"></div>
+  <!-- Vignettes -->
+  <div style="position:absolute; inset:0; background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%); z-index:1;"></div>
+  <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 40%); z-index:1;"></div>
+  <!-- Content -->
+  <div id="forest-content" style="position:absolute; bottom:80px; left:0; z-index:10; padding: 0 6vw;">
+    <div class="premium-divider"></div>
+    <h2 style="font-family:'Anton',sans-serif; font-size:clamp(48px,7vw,96px); color:#fff; text-transform:uppercase; line-height:0.92; margin-bottom:24px;">
+      Step Into<br>What Feels<br>Good.
+    </h2>
+    <p class="font-cormorant italic text-[20px] md:text-[22px]" style="color:rgba(255,255,255,0.8); font-weight:300; max-width:44ch; margin-bottom:32px;">The savanna isn't just where the puma runs. It's where you find your pace.</p>
+    <a href="#product-grid" class="btn-pill" style="border:1px solid rgba(255,255,255,0.4); color:#fff; background:transparent;">Find Your Feel →</a>
+  </div>
+</section>
+
+<!-- ===== 12. SNARL VIDEO SECTION ===== -->
+<section id="snarl-section" style="background:#0A0A0A; min-height:70vh;">
+  <div class="flex flex-col md:flex-row" style="min-height:70vh;">
+    <!-- Video Left -->
+    <div class="md:w-[55%] relative overflow-hidden" style="min-height:50vh;">
+      <video autoplay loop muted playsinline class="w-full h-full object-cover" style="position:absolute;inset:0;width:100%;height:100%;"
+             onerror="this.style.display='none';">
+        <source src="./assets/Snarl.mp4" type="video/mp4">
+      </video>
+      <!-- Fallback bg -->
+      <div style="position:absolute;inset:0; background-image:url('./images/puma-savanna.png'); background-size:cover; background-position:center; z-index:-1;"></div>
+      <div style="position:absolute;inset:0; background:rgba(10,10,10,0.5); z-index:-1;"></div>
+      <!-- Blend shadow -->
+      <div style="position:absolute;inset:0; box-shadow: inset -60px 0 80px rgba(10,10,10,0.8);"></div>
+    </div>
+    <!-- Copy Right -->
+    <div class="md:w-[45%] flex items-center" style="padding: clamp(40px,6vw,80px) clamp(24px,4vw,80px);">
+      <div id="snarl-copy">
+        <div>
+          <div class="premium-divider"></div>
+          <h2 style="font-family:'Anton',sans-serif; font-size:clamp(44px,5vw,76px); color:#fff; text-transform:uppercase; line-height:0.92; margin-bottom:24px;">
+            This Is What<br>Hungry Looks<br>Like.
+          </h2>
+          <p class="font-satoshi text-[16px] leading-[1.7] mb-8" style="color:rgba(255,255,255,0.55); max-width:40ch;">The puma doesn't negotiate with terrain. It doesn't ask permission from gravity. Neither should your next personal best.</p>
+          <a href="#product-grid" class="btn-pill btn-pill-green-outline">Shop The Collection →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 13. PUMAS IN JUNGLE ===== -->
+<section id="jungle-section" style="height:80vh; position:relative; overflow:hidden;">
+  <div id="jungle-bg" style="position:absolute; inset:0; height:130%; background-image:url('./images/puma-jungle.png'); background-size:cover; background-position:center;"></div>
+  <!-- Fallback -->
+  <div style="position:absolute; inset:0; height:130%; background: linear-gradient(160deg, #0d1f0a 0%, #1a3312 40%, #0a1a06 70%, #050d03 100%); z-index:0;"></div>
+  <!-- Gradient overlay -->
+  <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.3) 100%); z-index:1;"></div>
+  <!-- Content -->
+  <div id="jungle-content" style="position:absolute; bottom:60px; left:0; z-index:10; padding: 0 6vw;">
+    <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">The Pack Mentality</p>
+    <h2 style="font-family:'Anton',sans-serif; font-size:clamp(40px,6vw,80px); color:#fff; text-transform:uppercase; line-height:0.92; margin-bottom:24px;">
+      Run Together.<br>Win Alone.
+    </h2>
+    <p class="font-cormorant italic text-[18px] md:text-[20px]" style="color:rgba(255,255,255,0.7); font-weight:300; max-width:44ch;">In the wild, the pack hunts as one. On the track, the victory is yours.</p>
+  </div>
+</section>
+
+<!-- ===== 14. ATHLETE CAROUSEL ===== -->
+<section id="athlete-section" style="background:#0A0A0A;" class="section-pad">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <!-- Header -->
+    <div class="mb-12">
+      <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">Trusted By Champions</p>
+      <h2 style="font-family:'Anton',sans-serif; font-size:clamp(40px,6vw,72px); color:#fff; text-transform:uppercase; line-height:0.92;">The Athletes</h2>
+    </div>
+    <!-- Carousel -->
+    <div class="relative">
+      <div id="athlete-carousel">
+        <!-- Athlete 1 -->
+        <div class="athlete-card" style="background-color:#1A1A1A; background-image:url('./images/athlete-track.png');">
+          <div class="athlete-card-content">
+            <p class="font-satoshi text-[11px] tracking-[0.14em] uppercase text-[#2D5A1B] mb-2">India National Sprint Team</p>
+            <h3 style="font-family:'Anton',sans-serif; font-size:26px; color:#fff; text-transform:uppercase; margin-bottom:8px;">Arjun Mehta</h3>
+            <p class="font-cormorant italic text-[15px]" style="color:rgba(255,255,255,0.75); font-weight:300;">"I broke my 100m PB by 0.3 seconds. I credit the plate."</p>
+          </div>
+          <div class="athlete-pr">9.87s PB</div>
+        </div>
+        <!-- Athlete 2 -->
+        <div class="athlete-card" style="background-color:#1A1A1A; background-image:url('./images/athlete-track.png');">
+          <div class="athlete-card-content">
+            <p class="font-satoshi text-[11px] tracking-[0.14em] uppercase text-[#2D5A1B] mb-2">Kenya Marathon Team</p>
+            <h3 style="font-family:'Anton',sans-serif; font-size:26px; color:#fff; text-transform:uppercase; margin-bottom:8px;">Lina Chebet</h3>
+            <p class="font-cormorant italic text-[15px]" style="color:rgba(255,255,255,0.75); font-weight:300;">"The lightest carbon shoe I've ever raced in. Nothing comes close."</p>
+          </div>
+          <div class="athlete-pr">2:18:04</div>
+        </div>
+        <!-- Athlete 3 -->
+        <div class="athlete-card" style="background-color:#1A1A1A; background-image:url('./images/athlete-track.png');">
+          <div class="athlete-card-content">
+            <p class="font-satoshi text-[11px] tracking-[0.14em] uppercase text-[#2D5A1B] mb-2">European 800m Champion</p>
+            <h3 style="font-family:'Anton',sans-serif; font-size:26px; color:#fff; text-transform:uppercase; margin-bottom:8px;">Sofia Lindgren</h3>
+            <p class="font-cormorant italic text-[15px]" style="color:rgba(255,255,255,0.75); font-weight:300;">"Sprint spikes with marathon cushion. Unfair advantage."</p>
+          </div>
+          <div class="athlete-pr">1:56.3</div>
+        </div>
+      </div>
+      <!-- Nav Arrows -->
+      <button id="carousel-prev" class="hidden md:flex absolute left-[-20px] top-1/2 -translate-y-1/2 w-[44px] h-[44px] rounded-full border border-white/20 items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all z-10" aria-label="Previous">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="carousel-next" class="hidden md:flex absolute right-[-20px] top-1/2 -translate-y-1/2 w-[44px] h-[44px] rounded-full border border-white/20 items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all z-10" aria-label="Next">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <!-- Dots -->
+    <div id="carousel-dots" class="flex items-center justify-center gap-3 mt-8">
+      <button class="carousel-dot w-[28px] h-[4px] rounded-full bg-white/30 transition-all" data-index="0" aria-label="Slide 1"></button>
+      <button class="carousel-dot w-[12px] h-[4px] rounded-full bg-white/30 transition-all" data-index="1" aria-label="Slide 2"></button>
+      <button class="carousel-dot w-[12px] h-[4px] rounded-full bg-white/30 transition-all" data-index="2" aria-label="Slide 3"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 15. ESSENTIALS GRID ===== -->
+<section id="essentials" style="background:#F5F5F5;" class="section-pad">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <!-- Header -->
+    <div class="flex items-end justify-between mb-12">
+      <div>
+        <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">Curated Selection</p>
+        <h2 style="font-family:'Anton',sans-serif; font-size:clamp(40px,6vw,72px); text-transform:uppercase; line-height:0.92;">The Essentials</h2>
+      </div>
+      <a href="collections.html" class="hidden md:inline-flex font-satoshi font-medium text-[13px] tracking-[0.08em] uppercase text-[#0A0A0A] hover:text-[#2D5A1B] transition-colors">View All →</a>
+    </div>
+    <!-- Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3" style="gap:2px;">
+      <article class="essentials-card" style="height:520px; background-color:#2a3a1f; background-image:url('./images/puma-savanna.png'); background-size:cover; background-position:center;">
+        <img src="./images/shoe_obsidian_black.png" alt="Nitro Elite – Obsidian" class="card-shoe" onerror="this.style.display='none';">
+        <div class="card-bottom">
+          <h4 class="font-satoshi font-bold text-[17px] text-white mb-1">Nitro Elite Speed</h4>
+          <p class="font-satoshi text-[13px] text-white/60 mb-3">₹14,999</p>
+          <button class="add-to-cart-btn font-satoshi font-medium text-[12px] tracking-[0.1em] uppercase text-white" data-product-id="obsidian">Quick Add →</button>
+        </div>
+      </article>
+      <article class="essentials-card" style="height:520px; background-color:#141420; background-image:url('./images/savanna-landscape.png'); background-size:cover; background-position:center;">
+        <img src="./images/shoe_arctic_white.png" alt="Nitro Elite – Arctic" class="card-shoe" onerror="this.style.display='none';">
+        <div class="card-bottom">
+          <h4 class="font-satoshi font-bold text-[17px] text-white mb-1">Nitro Elite Speed</h4>
+          <p class="font-satoshi text-[13px] text-white/60 mb-3">₹14,999</p>
+          <button class="add-to-cart-btn font-satoshi font-medium text-[12px] tracking-[0.1em] uppercase text-white" data-product-id="arctic">Quick Add →</button>
+        </div>
+      </article>
+      <article class="essentials-card" style="height:520px; background-color:#2a2a1a; background-image:url('./images/puma-jungle.png'); background-size:cover; background-position:center;">
+        <img src="./images/shoe_savanna_gold.png" alt="Nitro Elite – Savanna" class="card-shoe" onerror="this.style.display='none';">
+        <div class="card-bottom">
+          <h4 class="font-satoshi font-bold text-[17px] text-white mb-1">Nitro Elite Speed</h4>
+          <p class="font-satoshi text-[13px] text-white/60 mb-3">₹14,999</p>
+          <button class="add-to-cart-btn font-satoshi font-medium text-[12px] tracking-[0.1em] uppercase text-white" data-product-id="savanna">Quick Add →</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 16. SUSTAINABILITY STRIP ===== -->
+<section id="sustainability" style="background:#2D5A1B; height:180px;">
+  <div class="max-w-[1200px] mx-auto h-full grid grid-cols-2 md:grid-cols-4 items-center px-6">
+    <div class="text-center py-4 md:border-r border-white/15">
+      <div class="counter-val" data-target="72" data-suffix="%">0%</div>
+      <p class="font-satoshi text-[12px] text-white/60 mt-1">Recycled Materials</p>
+    </div>
+    <div class="text-center py-4 md:border-r border-white/15">
+      <div class="counter-val" data-target="2028" data-suffix="">0</div>
+      <p class="font-satoshi text-[12px] text-white/60 mt-1">Carbon Neutral By</p>
+    </div>
+    <div class="text-center py-4 md:border-r border-white/15">
+      <div class="counter-val" data-target="100" data-suffix="%">0%</div>
+      <p class="font-satoshi text-[12px] text-white/60 mt-1">Recycled Packaging</p>
+    </div>
+    <div class="text-center py-4">
+      <div class="counter-val">B Corp</div>
+      <p class="font-satoshi text-[12px] text-white/60 mt-1">Certified 2025</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 17. FINAL CTA ===== -->
+<section id="final-cta" style="background:#0A0A0A;" class="section-pad">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 flex flex-col md:flex-row items-center gap-12 md:gap-16">
+    <!-- Left Shoe -->
+    <div class="md:w-1/2 flex justify-center">
+      <img src="./images/shoe_obsidian_black.png" alt="Nitro Elite Speed" class="w-[85%] max-w-[500px]" style="filter: drop-shadow(0 40px 80px rgba(0,0,0,0.4));"
+           onerror="this.outerHTML='<div style=\'width:400px;height:300px;background:#1A1A1A;display:flex;align-items:center;justify-content:center;border-radius:12px;color:#4A7C2F;font-family:Anton,sans-serif;font-size:28px;letter-spacing:0.04em;text-transform:uppercase;\'>NITRO ELITE</div>';">
+    </div>
+    <!-- Right Copy -->
+    <div class="md:w-1/2">
+      <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-6">Your Next PB Starts Here</p>
+      <h2 style="font-family:'Anton',sans-serif; font-size:clamp(40px,5vw,72px); color:#fff; text-transform:uppercase; line-height:0.95; margin-bottom:28px;">
+        Don't Just<br>Train.<br>Hunt.
+      </h2>
+      <p class="font-satoshi text-[16px] leading-[1.7] mb-4" style="color:rgba(255,255,255,0.55); max-width:44ch;">Built for the athlete who doesn't just want to finish — they want to finish first. The Nitro Elite Speed Series is the result of 11 years of relentless engineering.</p>
+      <p class="font-satoshi text-[16px] leading-[1.7] mb-10" style="color:rgba(255,255,255,0.55); max-width:44ch;">Join 50+ Olympic and World Championship athletes who've already made the switch.</p>
+      <div class="flex flex-wrap gap-4 mb-10">
+        <a href="#product-grid" class="btn-pill btn-pill-green">Shop Now — ₹14,999</a>
+        <a href="#benefits-section" class="btn-pill" style="border:1px solid rgba(255,255,255,0.2); color:#fff;">See Technology →</a>
+      </div>
+      <div class="flex flex-wrap gap-6">
+        <span class="flex items-center gap-2">
+          <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          <span class="font-satoshi text-[11px] text-white/50">Free Returns</span>
+        </span>
+        <span class="flex items-center gap-2">
+          <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span class="font-satoshi text-[11px] text-white/50">Next-Day Delivery</span>
+        </span>
+        <span class="flex items-center gap-2">
+          <svg width="14" height="14" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span class="font-satoshi text-[11px] text-white/50">Secure Checkout</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 18. EMAIL CAPTURE ===== -->
+<section id="email-section" class="bg-white">
+  <div style="padding: clamp(100px,14vw,200px) 20px; max-width:600px; margin:0 auto; text-align:center;">
+    <span class="inline-block font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#2D5A1B] bg-[#E8F0E4] px-4 py-2 rounded-full mb-8">Join The Pack</span>
+    <h2 style="font-family:'Anton',sans-serif; font-size:clamp(48px,8vw,96px); text-transform:uppercase; line-height:0.92; margin-bottom:20px;">
+      First To Run.<br>First To Know.
+    </h2>
+    <p class="font-cormorant italic text-[20px] text-[#6B6B6B] mb-10" style="font-weight:300;">New drops. Athlete stories. Training intel.</p>
+    <!-- Email Form -->
+    <form id="email-form" class="flex gap-3 max-w-[440px] mx-auto mb-6">
+      <input type="email" placeholder="Your email address" aria-label="Email address" required
+             class="flex-1 font-satoshi text-[15px] bg-transparent border-b-[1.5px] border-[#0A0A0A] px-1 py-3 outline-none focus:border-[#2D5A1B] transition-colors">
+      <button type="submit" class="btn-pill btn-pill-green py-3 px-6">Join</button>
+    </form>
+    <!-- Success -->
+    <div id="email-success" style="display:none;" class="flex flex-col items-center gap-4">
+      <div class="w-[56px] h-[56px] rounded-full bg-[#E8F0E4] flex items-center justify-center">
+        <svg width="28" height="28" fill="none" stroke="#2D5A1B" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <p class="font-satoshi font-medium text-[16px]">You're in. Welcome to the pack.</p>
+    </div>
+    <p class="font-satoshi text-[10px] text-[#ADADAD]">By joining you agree to our Privacy Policy. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+</div><!-- END #main-content -->
+
+<!-- ===== FOOTER ===== -->
+<footer style="background:#0A0A0A; overflow:hidden;">
+  <!-- Editorial Block -->
+  <div style="border-top:1px solid #1C1C1C; padding-top: clamp(72px,10vw,140px);" class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-6">Hungry For More — Since 1948</p>
+    <h2 style="font-family:'Anton',sans-serif; font-size:clamp(52px,10vw,148px); color:#fff; text-transform:uppercase; line-height:0.88;">
+      Made<br>For The<br>Hunt.
+    </h2>
+  </div>
+  <!-- Nav Grid -->
+  <div style="padding-top: clamp(60px,7vw,96px); margin-bottom:64px;" class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Shop -->
+      <div>
+        <h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Shop</h5>
+        <ul class="space-y-3">
+          <li><a href="men.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Men</a></li>
+          <li><a href="women.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Women</a></li>
+          <li><a href="running.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Running</a></li>
+          <li><a href="collections.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Collections</a></li>
+          <li><a href="stories.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Stories</a></li>
+        </ul>
+      </div>
+      <!-- Company -->
+      <div>
+        <h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Company</h5>
+        <ul class="space-y-3">
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">About PUMA</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Careers</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Sustainability</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Press Room</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Investors</a></li>
+        </ul>
+      </div>
+      <!-- Support -->
+      <div>
+        <h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Support</h5>
+        <ul class="space-y-3">
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Track Order</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Returns &amp; Exchanges</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Size Guide</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Contact Us</a></li>
+          <li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">FAQ</a></li>
+        </ul>
+      </div>
+      <!-- Follow -->
+      <div>
+        <h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Follow</h5>
+        <ul class="space-y-3">
+          <li>
+            <a href="#" class="flex items-center gap-3 group">
+              <span class="w-[32px] h-[32px] rounded-full border border-[#2A2A2A] flex items-center justify-center group-hover:border-[#2D5A1B] transition-colors">
+                <svg width="14" height="14" fill="none" stroke="#5A5A5A" stroke-width="1.5" viewBox="0 0 24 24" class="group-hover:stroke-[#2D5A1B] transition-colors"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </span>
+              <span class="font-satoshi text-[13px] text-[#5A5A5A] group-hover:text-white transition-colors">Instagram</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 group">
+              <span class="w-[32px] h-[32px] rounded-full border border-[#2A2A2A] flex items-center justify-center group-hover:border-[#2D5A1B] transition-colors">
+                <svg width="14" height="14" fill="none" stroke="#5A5A5A" stroke-width="1.5" viewBox="0 0 24 24" class="group-hover:stroke-[#2D5A1B] transition-colors"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              </span>
+              <span class="font-satoshi text-[13px] text-[#5A5A5A] group-hover:text-white transition-colors">YouTube</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 group">
+              <span class="w-[32px] h-[32px] rounded-full border border-[#2A2A2A] flex items-center justify-center group-hover:border-[#2D5A1B] transition-colors">
+                <svg width="14" height="14" fill="none" stroke="#5A5A5A" stroke-width="1.5" viewBox="0 0 24 24" class="group-hover:stroke-[#2D5A1B] transition-colors"><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94"/></svg>
+              </span>
+              <span class="font-satoshi text-[13px] text-[#5A5A5A] group-hover:text-white transition-colors">Strava</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bottom Bar -->
+  <div style="border-top:1px solid #141414; padding:28px 0;" class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <img src="./assets/puma-logo-png-26.webp" alt="" class="h-[22px] brightness-0 invert opacity-25" onerror="this.outerHTML='<span style=\'font-family:Anton;font-size:16px;color:rgba(255,255,255,0.25)\'>PUMA</span>';">
+      <div class="flex flex-wrap items-center gap-2 text-center">
+        <a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50 transition-colors">Privacy Policy</a>
+        <span class="text-[#1E1E1E]">·</span>
+        <a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50 transition-colors">Terms of Service</a>
+        <span class="text-[#1E1E1E]">·</span>
+        <a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50 transition-colors">Cookie Settings</a>
+        <span class="text-[#1E1E1E]">·</span>
+        <a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50 transition-colors">Accessibility</a>
+      </div>
+      <span class="font-satoshi text-[11px] text-[#3A3A3A]">© 2026 PUMA SE · 🇮🇳 India</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== CART OVERLAY + DRAWER ===== -->
+<div id="cart-overlay"></div>
+<div id="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping bag">
+  <div class="cart-header">
+    <div class="flex items-center gap-3">
+      <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+      <span class="font-satoshi font-medium text-[13px] text-white tracking-[0.08em] uppercase">Bag (<span id="cart-count">0</span>)</span>
+    </div>
+    <button id="cart-close" class="text-white/60 hover:text-white transition-colors" aria-label="Close bag">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <!-- Items -->
+  <div id="cart-items"></div>
+  <!-- Empty State -->
+  <div id="cart-empty">
+    <svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+    <p class="font-satoshi text-[16px] text-white/50">Your bag is empty</p>
+    <p class="font-satoshi text-[13px] text-white/25">Add something worth hunting for</p>
+  </div>
+  <!-- Footer -->
+  <div id="cart-footer" style="display:none;">
+    <div class="flex items-center justify-between mb-4">
+      <span class="font-satoshi font-medium text-[14px] text-white/60 uppercase tracking-[0.08em]">Subtotal</span>
+      <span id="cart-subtotal" class="font-oswald font-bold text-[22px] text-white">₹0</span>
+    </div>
+    <button id="checkout-btn" class="w-full btn-pill btn-pill-green py-4 text-[13px]">Checkout</button>
+    <p class="font-satoshi text-[10px] text-white/25 text-center mt-3">Taxes and shipping calculated at checkout</p>
+  </div>
+</div>
+
+<!-- ===== SIZE OVERLAY + SHEET ===== -->
+<div id="size-overlay"></div>
+<div id="size-sheet" role="dialog" aria-modal="true" aria-label="Select size">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h3 id="size-sheet-name" class="font-satoshi font-bold text-[17px] text-white"></h3>
+      <p id="size-sheet-color" class="font-satoshi text-[13px] text-white/50"></p>
+    </div>
+    <button id="size-close" class="text-white/60 hover:text-white transition-colors" aria-label="Close size selector">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="font-satoshi font-medium text-[10px] tracking-[0.14em] uppercase text-white/40 mb-4">Select UK Size</p>
+  <div id="size-grid" class="grid grid-cols-4 gap-2 mb-6"></div>
+  <button id="size-confirm" class="w-full btn-pill btn-pill-green py-4 text-[13px] opacity-30 pointer-events-none" disabled>Add to Bag</button>
+</div>
+
+<!-- ===== SEARCH OVERLAY + PANEL ===== -->
+<div id="search-overlay"></div>
+<div id="search-panel" role="dialog" aria-modal="true" aria-label="Search products">
+  <div class="flex items-center gap-4 max-w-[900px] mx-auto">
+    <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input id="search-input" type="text" placeholder="Search..." aria-label="Search products">
+    <button id="search-close" class="text-white/60 hover:text-white transition-colors" aria-label="Close search">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="search-results" class="flex flex-wrap gap-3 mt-6 max-w-[900px] mx-auto"></div>
+</div>
+
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+(function() {
+  'use strict';
+
+  // ===== PRODUCTS & CART DATA =====
+  const PRODUCTS = {
+    obsidian: { id: 'obsidian', name: 'Nitro Elite Speed', color: 'Obsidian Black / Gold', price: 14999, img: './images/shoe_obsidian_black.png' },
+    arctic:   { id: 'arctic',   name: 'Nitro Elite Speed', color: 'Arctic White / Ice',    price: 14999, img: './images/shoe_arctic_white.png' },
+    savanna:  { id: 'savanna',  name: 'Nitro Elite Speed', color: 'Savanna Gold / Earth',   price: 14999, img: './images/shoe_savanna_gold.png' }
+  };
+  const SIZES = ['UK 5','UK 6','UK 7','UK 8','UK 9','UK 10','UK 11','UK 12'];
+  let cart = [];
+  let pendingProductId = null;
+  let selectedSize = null;
+
+  // ===== DOM REFS =====
+  const preloader      = document.getElementById('preloader');
+  const mainContent    = document.getElementById('main-content');
+  const nav            = document.getElementById('sticky-nav');
+  const navLogoImg     = document.getElementById('nav-logo-img');
+  const hamburger      = document.getElementById('hamburger');
+  const mobileOverlay  = document.getElementById('mobile-nav-overlay');
+  const cartBadge      = document.getElementById('cart-badge');
+  const cartCount      = document.getElementById('cart-count');
+  const cartOverlay    = document.getElementById('cart-overlay');
+  const cartDrawer     = document.getElementById('cart-drawer');
+  const cartItemsEl    = document.getElementById('cart-items');
+  const cartEmpty      = document.getElementById('cart-empty');
+  const cartFooter     = document.getElementById('cart-footer');
+  const cartSubtotal   = document.getElementById('cart-subtotal');
+  const sizeOverlay    = document.getElementById('size-overlay');
+  const sizeSheet      = document.getElementById('size-sheet');
+  const sizeGrid       = document.getElementById('size-grid');
+  const sizeConfirm    = document.getElementById('size-confirm');
+  const searchOverlay  = document.getElementById('search-overlay');
+  const searchPanel    = document.getElementById('search-panel');
+  const searchInput    = document.getElementById('search-input');
+  const searchResults  = document.getElementById('search-results');
+
+  // ===== PRELOADER =====
+  setTimeout(function() {
+    preloader.classList.add('fade-out');
+    mainContent.style.opacity = '1';
+    mainContent.style.transition = 'opacity 500ms ease';
+    setTimeout(function() { preloader.style.display = 'none'; }, 500);
+  }, 1800);
+
+  // ===== HAMBURGER =====
+  hamburger.addEventListener('click', function() {
+    const isOpen = hamburger.classList.toggle('active');
+    mobileOverlay.classList.toggle('open', isOpen);
+    mobileOverlay.setAttribute('aria-hidden', !isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // ===== HERO CANVAS =====
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  const frameCount = 200;
+  const images = [];
+  let currentFrame = 0;
+
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * dpr;
+    canvas.height = canvas.offsetHeight * dpr;
+    ctx.scale(dpr, dpr);
+    drawFrame(currentFrame);
+  }
+
+  function drawFrame(n) {
+    if (!images[n] || !images[n].complete || !images[n].naturalWidth) {
+      // Fallback: dark canvas
+      ctx.fillStyle = '#0A0A0A';
+      ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+      return;
+    }
+    const img = images[n];
+    const cw = canvas.offsetWidth, ch = canvas.offsetHeight;
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const scale = Math.max(cw / iw, ch / ih);
+    const w = iw * scale, h = ih * scale;
+    const x = (cw - w) / 2, y = (ch - h) / 2;
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, x, y, w, h);
+  }
+
+  function preloadFrames() {
+    for (let i = 0; i < frameCount; i++) {
+      (function(index) {
+        const img = new Image();
+        img.onload = function() {
+          if (index === 0) drawFrame(0);
+        };
+        img.src = './frames/ezgif-frame-' + String(index + 1).padStart(3, '0') + '.jpg';
+        images[index] = img;
+      })(i);
+    }
+    // Handle cached frame 0
+    if (images[0] && images[0].complete && images[0].naturalWidth > 0) {
+      drawFrame(0);
+    }
+  }
+
+  resizeCanvas();
+  preloadFrames();
+  window.addEventListener('resize', resizeCanvas);
+
+  // ===== GSAP ANIMATIONS =====
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero frame scrub
+    const heroObj = { frame: 0 };
+    gsap.to(heroObj, {
+      frame: frameCount - 1,
+      snap: 'frame',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero-canvas-section',
+        start: 'top 36px',
+        end: 'bottom bottom',
+        scrub: true
+      },
+      onUpdate: function() {
+        currentFrame = Math.round(heroObj.frame);
+        drawFrame(currentFrame);
+      }
+    });
+
+    // Nav visibility
+    ScrollTrigger.create({
+      trigger: '#hero-canvas-section',
+      start: 'top top',
+      end: 'bottom top',
+      onUpdate: function(self) {
+        if (self.progress > 0.3) {
+          nav.classList.add('visible');
+        }
+        nav.classList.toggle('scrolled-far', self.progress >= 1);
+      }
+    });
+
+    // Hero text reveal
+    ScrollTrigger.create({
+      trigger: '#hero-canvas-section',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: function(self) {
+        const words = document.querySelectorAll('.hero-word');
+        const label = document.getElementById('hero-brand-label');
+        const stat = document.getElementById('hero-speed-stat');
+        if (self.progress > 0.2) {
+          words.forEach(function(w) { w.classList.add('visible'); });
+        } else {
+          words.forEach(function(w) { w.classList.remove('visible'); });
+        }
+        if (self.progress > 0.45) {
+          label.classList.add('visible');
+          stat.classList.add('visible');
+        } else {
+          label.classList.remove('visible');
+          stat.classList.remove('visible');
+        }
+      }
+    });
+
+    // Product intro words
+    gsap.from('.word', {
+      opacity: 0, y: 40, stagger: 0.08, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#product-intro', start: 'top 60%' }
+    });
+
+    // Product grid cards
+    gsap.from('.product-card', {
+      opacity: 0, y: 40, stagger: 0.14, duration: 0.6,
+      scrollTrigger: { trigger: '#product-grid', start: 'top 75%' }
+    });
+
+    // Forest parallax
+    gsap.to('#forest-bg', {
+      backgroundPositionY: '70%', ease: 'none',
+      scrollTrigger: { trigger: '#forest-section', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+
+    // Forest content reveal
+    gsap.from('#forest-content > *', {
+      opacity: 0, y: 30, stagger: 0.1, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#forest-section', start: 'top 40%' }
+    });
+
+    // Snarl copy stagger
+    gsap.from('#snarl-copy > div > *', {
+      opacity: 0, x: 30, stagger: 0.1, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#snarl-section', start: 'top 60%' }
+    });
+
+    // Jungle parallax
+    gsap.to('#jungle-bg', {
+      backgroundPositionY: '70%', ease: 'none',
+      scrollTrigger: { trigger: '#jungle-section', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+
+    // Jungle content reveal
+    gsap.from('#jungle-content > *', {
+      opacity: 0, y: 30, stagger: 0.1, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#jungle-section', start: 'top 40%' }
+    });
+
+    // Essentials cards
+    gsap.from('.essentials-card', {
+      opacity: 0, y: 48, stagger: 0.18, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#essentials', start: 'top 70%' }
+    });
+
+    // Sustainability counters
+    let countersAnimated = false;
+    ScrollTrigger.create({
+      trigger: '#sustainability',
+      start: 'top 80%',
+      onEnter: function() {
+        if (countersAnimated) return;
+        countersAnimated = true;
+        document.querySelectorAll('.counter-val[data-target]').forEach(function(el) {
+          const target = parseInt(el.dataset.target);
+          const suffix = el.dataset.suffix || '';
+          const start = performance.now();
+          const duration = 1400;
+          function tick(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+            const val = Math.round(eased * target);
+            el.textContent = val + suffix;
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+    });
+
+    // Email section
+    gsap.from('#email-section > div > *', {
+      opacity: 0, y: 24, stagger: 0.1, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#email-section', start: 'top 70%' }
+    });
+
+  } else {
+    // Reduced motion fallback
+    nav.classList.add('visible', 'glass');
+    document.querySelectorAll('.hero-word').forEach(function(w) { w.classList.add('visible'); });
+    document.getElementById('hero-brand-label').classList.add('visible');
+    document.getElementById('hero-speed-stat').classList.add('visible');
+    drawFrame(0);
+    // Show counters at target immediately
+    document.querySelectorAll('.counter-val[data-target]').forEach(function(el) {
+      el.textContent = el.dataset.target + (el.dataset.suffix || '');
+    });
+  }
+
+  // ===== ATHLETE CAROUSEL =====
+  const carousel = document.getElementById('athlete-carousel');
+  const dots = document.querySelectorAll('.carousel-dot');
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+
+  function updateDots() {
+    const scrollLeft = carousel.scrollLeft;
+    const cardWidth = 362; // 360 + 2 gap
+    const idx = Math.round(scrollLeft / cardWidth);
+    dots.forEach(function(d, i) {
+      d.style.width = (i === idx) ? '28px' : '12px';
+      d.style.background = (i === idx) ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.3)';
+    });
+  }
+
+  carousel.addEventListener('scroll', updateDots);
+  prevBtn.addEventListener('click', function() { carousel.scrollBy({ left: -362, behavior: 'smooth' }); });
+  nextBtn.addEventListener('click', function() { carousel.scrollBy({ left: 362, behavior: 'smooth' }); });
+  dots.forEach(function(d) {
+    d.addEventListener('click', function() {
+      carousel.scrollTo({ left: parseInt(d.dataset.index) * 362, behavior: 'smooth' });
+    });
+  });
+
+  // ===== CART SYSTEM =====
+  function renderCart() {
+    const count = cart.reduce(function(a, b) { return a + b.qty; }, 0);
+    cartCount.textContent = count;
+    cartBadge.textContent = count;
+    cartBadge.style.display = count > 0 ? 'flex' : 'none';
+
+    if (cart.length === 0) {
+      cartItemsEl.innerHTML = '';
+      cartEmpty.style.display = 'flex';
+      cartFooter.style.display = 'none';
+      return;
+    }
+
+    cartEmpty.style.display = 'none';
+    cartFooter.style.display = 'block';
+
+    let html = '';
+    cart.forEach(function(item) {
+      html += '<div class="cart-item" data-item-id="' + item.id + '">'
+        + '<div class="cart-item-img"><img src="' + item.img + '" alt="' + item.name + '" onerror="this.parentElement.innerHTML=\'<span style=color:rgba(255,255,255,0.2);font-size:10px;>SHOE</span>\';"></div>'
+        + '<div class="flex-1">'
+        + '<p class="font-satoshi font-bold text-[14px] text-white mb-1">' + item.name + '</p>'
+        + '<p class="font-satoshi text-[12px] text-white/40 mb-1">' + item.color + '</p>'
+        + '<p class="font-satoshi text-[11px] text-white/40 mb-3">Size: ' + item.size + '</p>'
+        + '<div class="flex items-center gap-3">'
+        + '<button class="qty-btn qty-minus" data-item-id="' + item.id + '" aria-label="Decrease quantity">−</button>'
+        + '<span class="font-satoshi text-[13px] text-white w-6 text-center">' + item.qty + '</span>'
+        + '<button class="qty-btn qty-plus" data-item-id="' + item.id + '" aria-label="Increase quantity">+</button>'
+        + '</div>'
+        + '</div>'
+        + '<div class="flex flex-col items-end justify-between">'
+        + '<button class="cart-remove text-white/30 hover:text-white transition-colors" data-item-id="' + item.id + '" aria-label="Remove item">'
+        + '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+        + '</button>'
+        + '<span class="font-oswald font-bold text-[16px] text-white">₹' + (item.price * item.qty).toLocaleString('en-IN') + '</span>'
+        + '</div></div>';
+    });
+    cartItemsEl.innerHTML = html;
+
+    const subtotal = cart.reduce(function(a, b) { return a + b.price * b.qty; }, 0);
+    cartSubtotal.textContent = '₹' + subtotal.toLocaleString('en-IN');
+
+    // Wire qty buttons
+    cartItemsEl.querySelectorAll('.qty-minus').forEach(function(btn) {
+      btn.addEventListener('click', function() { changeQty(btn.dataset.itemId, -1); });
+    });
+    cartItemsEl.querySelectorAll('.qty-plus').forEach(function(btn) {
+      btn.addEventListener('click', function() { changeQty(btn.dataset.itemId, 1); });
+    });
+    cartItemsEl.querySelectorAll('.cart-remove').forEach(function(btn) {
+      btn.addEventListener('click', function() { removeFromCart(btn.dataset.itemId); });
+    });
+  }
+
+  function addToCart(productId, size) {
+    const product = PRODUCTS[productId];
+    if (!product) return;
+    const itemId = productId + '_' + size.replace(/\s/g, '');
+    const existing = cart.find(function(c) { return c.id === itemId; });
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ id: itemId, productId: productId, name: product.name, color: product.color, price: product.price, img: product.img, size: size, qty: 1 });
+    }
+    renderCart();
+    openCart();
+  }
+
+  function removeFromCart(itemId) {
+    cart = cart.filter(function(c) { return c.id !== itemId; });
+    renderCart();
+  }
+
+  function changeQty(itemId, delta) {
+    const item = cart.find(function(c) { return c.id === itemId; });
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) { removeFromCart(itemId); return; }
+    renderCart();
+  }
+
+  function openCart() {
+    cartOverlay.classList.add('open');
+    cartDrawer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCart() {
+    cartOverlay.classList.remove('open');
+    cartDrawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function openSizeSheet(productId) {
+    pendingProductId = productId;
+    selectedSize = null;
+    const product = PRODUCTS[productId];
+    if (!product) return;
+    document.getElementById('size-sheet-name').textContent = product.name;
+    document.getElementById('size-sheet-color').textContent = product.color;
+    sizeGrid.innerHTML = '';
+    SIZES.forEach(function(s) {
+      const btn = document.createElement('button');
+      btn.className = 'size-btn';
+      btn.textContent = s;
+      btn.addEventListener('click', function() {
+        sizeGrid.querySelectorAll('.size-btn').forEach(function(b) { b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        selectedSize = s;
+        sizeConfirm.style.opacity = '1';
+        sizeConfirm.style.pointerEvents = 'auto';
+        sizeConfirm.disabled = false;
+      });
+      sizeGrid.appendChild(btn);
+    });
+    sizeConfirm.style.opacity = '0.3';
+    sizeConfirm.style.pointerEvents = 'none';
+    sizeConfirm.disabled = true;
+    sizeOverlay.classList.add('open');
+    sizeSheet.classList.add('open');
+  }
+  function closeSizeSheet() {
+    sizeOverlay.classList.remove('open');
+    sizeSheet.classList.remove('open');
+  }
+
+  function openSearch() {
+    searchOverlay.classList.add('open');
+    searchPanel.classList.add('open');
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+    setTimeout(function() { searchInput.focus(); }, 400);
+  }
+  function closeSearch() {
+    searchOverlay.classList.remove('open');
+    searchPanel.classList.remove('open');
+  }
+
+  // Wire add-to-cart buttons
+  document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      openSizeSheet(btn.dataset.productId);
+    });
+  });
+
+  // Size confirm
+  sizeConfirm.addEventListener('click', function() {
+    if (pendingProductId && selectedSize) {
+      addToCart(pendingProductId, selectedSize);
+      closeSizeSheet();
+    }
+  });
+
+  // Cart button
+  document.getElementById('cart-btn').addEventListener('click', openCart);
+  document.getElementById('cart-close').addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', closeCart);
+
+  // Size overlay close
+  document.getElementById('size-close').addEventListener('click', closeSizeSheet);
+  sizeOverlay.addEventListener('click', closeSizeSheet);
+
+  // Search
+  document.getElementById('search-btn').addEventListener('click', openSearch);
+  document.getElementById('search-close').addEventListener('click', closeSearch);
+  searchOverlay.addEventListener('click', closeSearch);
+
+  searchInput.addEventListener('input', function() {
+    const q = searchInput.value.toLowerCase();
+    if (!q) { searchResults.innerHTML = ''; return; }
+    let html = '';
+    Object.values(PRODUCTS).forEach(function(p) {
+      if (p.name.toLowerCase().includes(q) || p.color.toLowerCase().includes(q)) {
+        html += '<div class="search-result-card" data-product-id="' + p.id + '">'
+          + '<div style="width:52px;height:52px;background:#222;border-radius:6px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;">'
+          + '<img src="' + p.img + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:contain;" onerror="this.outerHTML=\'<span style=color:rgba(255,255,255,0.2);font-size:8px;>SHOE</span>\';"></div>'
+          + '<div><p class="font-satoshi font-bold text-[14px] text-white">' + p.name + '</p>'
+          + '<p class="font-satoshi text-[12px] text-white/40">' + p.color + '</p></div>'
+          + '<span class="ml-auto font-satoshi font-medium text-[11px] text-[#2D5A1B] uppercase tracking-[0.1em]">+ Add</span>'
+          + '</div>';
+      }
+    });
+    searchResults.innerHTML = html || '<p class="font-satoshi text-[14px] text-white/30">No results found</p>';
+    searchResults.querySelectorAll('.search-result-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        closeSearch();
+        openSizeSheet(card.dataset.productId);
+      });
+    });
+  });
+
+  // Checkout
+  document.getElementById('checkout-btn').addEventListener('click', function() {
+    alert('Checkout coming soon!\n\nThis is a portfolio demo — no real transactions.');
+  });
+
+  // Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeCart(); closeSizeSheet(); closeSearch(); }
+  });
+
+  // Email form
+  document.getElementById('email-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    form.style.transition = 'opacity 400ms ease';
+    form.style.opacity = '0';
+    setTimeout(function() {
+      form.style.display = 'none';
+      var success = document.getElementById('email-success');
+      success.style.display = 'flex';
+      success.style.opacity = '0';
+      success.style.transition = 'opacity 400ms ease';
+      requestAnimationFrame(function() { success.style.opacity = '1'; });
+    }, 400);
+  });
+
+  // Initial render
+  renderCart();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — PUMA Nitro Elite Speed Series</title>
+<meta name="description" content="Explore PUMA's curated collections: Nitro Elite, Savanna Capsule, and Essentials.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,400i&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{anton:['Anton','sans-serif'],satoshi:['Satoshi','sans-serif'],oswald:['Oswald','sans-serif'],cormorant:['Cormorant Garamond','serif']}}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root{--brand-green:#2D5A1B;--brand-green-mid:#4A7C2F;--brand-pale:#E8F0E4;--text-primary:#0A0A0A;--text-muted:#6B6B6B;--section-dark:#0A0A0A;--hairline:#E5E5E5;--ease-spring:cubic-bezier(0.16,1,0.3,1)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}body{font-family:'Satoshi',sans-serif;color:var(--text-primary);overflow-x:hidden}img{max-width:100%;display:block}a{text-decoration:none;color:inherit}button{cursor:pointer;border:none;background:none;font-family:inherit}
+*:focus-visible{outline:2px solid var(--brand-green);outline-offset:2px}
+#grain-overlay{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0.035}
+#sticky-nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:920px;border-radius:9999px;z-index:50;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.06);box-shadow:0 4px 24px rgba(0,0,0,0.1)}
+#sticky-nav #nav-logo-img{filter:brightness(0)}
+.nav-link{position:relative;font-family:'Satoshi',sans-serif;font-weight:500;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#0A0A0A}.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:1.5px;background:var(--brand-green);transform:scaleX(0);transition:transform 300ms var(--ease-spring)}.nav-link:nth-child(odd)::after{transform-origin:left}.nav-link:nth-child(even)::after{transform-origin:right}.nav-link:hover::after{transform:scaleX(1)}
+.nav-cta{font-family:'Satoshi',sans-serif;font-weight:500;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;background:#0A0A0A;padding:8px 20px;border-radius:9999px;transition:all 250ms var(--ease-spring)}.nav-cta:hover{transform:translateY(-1px)}
+#hamburger{width:32px;height:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}#hamburger span{display:block;width:22px;height:1.5px;background:#0A0A0A;transition:all 300ms var(--ease-spring)}#hamburger.active span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}#hamburger.active span:nth-child(2){opacity:0}#hamburger.active span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+#mobile-nav-overlay{position:fixed;inset:0;z-index:90;background:var(--brand-green);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transform:translateY(-100%);transition:transform 500ms var(--ease-spring)}#mobile-nav-overlay.open{transform:translateY(0)}
+.mobile-nav-link{font-family:'Anton',sans-serif;font-size:48px;color:#fff;text-transform:uppercase;opacity:0;transform:translateY(20px);transition:all 400ms var(--ease-spring)}#mobile-nav-overlay.open .mobile-nav-link{opacity:1;transform:translateY(0)}
+.section-pad{padding:clamp(100px,12vw,180px) 0}
+.btn-pill{display:inline-flex;align-items:center;justify-content:center;border-radius:9999px;font-family:'Satoshi',sans-serif;font-weight:500;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;padding:14px 32px;transition:all 250ms var(--ease-spring)}.btn-pill:hover{transform:translateY(-1px)}
+.btn-pill-dark{background:var(--section-dark);color:#fff}
+.collection-card{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;cursor:pointer}
+.collection-card .card-overlay{position:absolute;inset:0;transition:opacity 400ms ease}
+.collection-card:hover .card-overlay{opacity:0.85}
+.collection-card .card-content{position:relative;z-index:5;padding:clamp(40px,6vw,80px)}
+/* Cart */
+#cart-overlay,#size-overlay,#search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(5px);z-index:9000;opacity:0;pointer-events:none;transition:opacity 300ms ease}#cart-overlay.open,#size-overlay.open,#search-overlay.open{opacity:1;pointer-events:all}
+#cart-drawer{position:fixed;top:0;right:0;height:100dvh;width:min(440px,100vw);background:#0C0C0C;z-index:9100;transform:translateX(100%);transition:transform 380ms var(--ease-spring);border-left:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column}#cart-drawer.open{transform:translateX(0)}
+#cart-drawer .cart-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.06)}
+#cart-items{flex:1;overflow-y:auto;padding:16px 24px}#cart-footer{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.06)}
+.cart-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.04)}.cart-item-img{width:84px;height:84px;background:#1A1A1A;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}.cart-item-img img{width:100%;height:100%;object-fit:contain}
+.qty-btn{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 200ms ease}.qty-btn:hover{background:var(--brand-green);border-color:var(--brand-green)}
+#cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;padding:40px}
+.btn-pill-green{background:var(--brand-green);color:#fff}.btn-pill-green:hover{background:var(--brand-green-mid)}
+#size-sheet{position:fixed;bottom:0;left:50%;width:min(520px,100vw);transform:translateX(-50%) translateY(110%);z-index:9200;background:#0C0C0C;border-radius:20px 20px 0 0;border:1px solid rgba(255,255,255,0.07);border-bottom:none;padding:28px 28px 36px;transition:transform 380ms var(--ease-spring)}#size-sheet.open{transform:translateX(-50%) translateY(0)}
+.size-btn{border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:'Satoshi',sans-serif;font-size:13px;padding:12px;text-align:center;transition:all 200ms ease}.size-btn:hover{border-color:rgba(255,255,255,0.3)}.size-btn.selected{background:var(--brand-green);border-color:var(--brand-green)}
+#search-panel{position:fixed;top:0;left:0;right:0;z-index:9100;background:#0C0C0C;transform:translateY(-100%);transition:transform 380ms var(--ease-spring);padding:32px}#search-panel.open{transform:translateY(0)}
+#search-input{font-family:'Anton',sans-serif;font-size:clamp(24px,4vw,44px);text-transform:uppercase;background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,0.15);color:#fff;width:100%;padding:12px 0;outline:none}#search-input:focus{border-color:var(--brand-green)}#search-input::placeholder{color:rgba(255,255,255,0.25)}
+.search-result-card{display:flex;align-items:center;gap:16px;padding:16px;background:#1A1A1A;border-radius:8px;cursor:pointer;transition:background 200ms ease}.search-result-card:hover{background:#222}
+</style>
+</head>
+<body>
+
+<svg id="grain-overlay" width="100%" height="100%"><filter id="gf"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gf)"/></svg>
+
+<nav id="sticky-nav" role="navigation" aria-label="Main navigation">
+  <div class="flex items-center justify-between h-[52px] md:h-[58px] px-5 md:px-7">
+    <a href="index.html"><img id="nav-logo-img" src="./assets/puma-logo-png-26.webp" alt="PUMA Home" class="h-[32px] md:h-[36px]" onerror="this.outerHTML='<span style=font-family:Anton;font-size:22px;letter-spacing:0.06em>PUMA</span>';"></a>
+    <div class="hidden lg:flex items-center gap-8"><a href="men.html" class="nav-link">Men</a><a href="women.html" class="nav-link">Women</a><a href="running.html" class="nav-link">Running</a><a href="collections.html" class="nav-link" style="color:#2D5A1B;">Collections</a><a href="stories.html" class="nav-link">Stories</a></div>
+    <div class="hidden md:flex items-center gap-4">
+      <button id="search-btn" aria-label="Search"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
+      <button id="cart-btn" class="relative" aria-label="Shopping bag"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg><span id="cart-badge" style="display:none" class="absolute -top-1 -right-1 w-[18px] h-[18px] bg-[#2D5A1B] rounded-full text-white text-[10px] font-satoshi font-bold items-center justify-center">0</span></button>
+      <a href="#collections-grid" class="nav-cta">Explore</a>
+    </div>
+    <button id="hamburger" class="md:hidden" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div id="mobile-nav-overlay" aria-hidden="true"><a href="men.html" class="mobile-nav-link">Men</a><a href="women.html" class="mobile-nav-link">Women</a><a href="running.html" class="mobile-nav-link">Running</a><a href="collections.html" class="mobile-nav-link">Collections</a><a href="stories.html" class="mobile-nav-link">Stories</a></div>
+
+<!-- Collections Grid — 3 Full-height Editorial Cards -->
+<section id="collections-grid" style="padding-top:100px;">
+
+  <!-- Card 1: Nitro Elite -->
+  <div class="collection-card" onclick="window.location.href='running.html'">
+    <div style="position:absolute;inset:0;background:#0A0A0A;"></div>
+    <div style="position:absolute;inset:0;background-image:url('./images/puma-savanna.png');background-size:cover;background-position:center;opacity:0.15;"></div>
+    <div class="card-overlay" style="background:linear-gradient(to top,rgba(10,10,10,0.95) 0%,rgba(10,10,10,0.3) 100%);"></div>
+    <div class="card-content">
+      <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">01 — Performance</p>
+      <h2 style="font-family:'Anton',sans-serif;font-size:clamp(48px,8vw,100px);color:#fff;text-transform:uppercase;line-height:0.92;margin-bottom:16px;">Nitro<br>Elite.</h2>
+      <p class="font-satoshi text-[15px] text-white/50 max-w-[44ch] mb-8">The full-carbon race platform. Every gram engineered to win. From 5K to marathon — zero compromise performance.</p>
+      <span class="btn-pill btn-pill-dark" style="border:1px solid rgba(255,255,255,0.12);">Shop Collection →</span>
+    </div>
+  </div>
+
+  <!-- Card 2: Savanna Capsule -->
+  <div class="collection-card" onclick="window.location.href='running.html'">
+    <div style="position:absolute;inset:0;background:#3A2E1C;"></div>
+    <div style="position:absolute;inset:0;background-image:url('./images/savanna-landscape.png');background-size:cover;background-position:center;opacity:0.2;"></div>
+    <div class="card-overlay" style="background:linear-gradient(to top,rgba(58,46,28,0.95) 0%,rgba(58,46,28,0.3) 100%);"></div>
+    <div class="card-content">
+      <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#C4A35A] mb-4">02 — Heritage</p>
+      <h2 style="font-family:'Anton',sans-serif;font-size:clamp(48px,8vw,100px);color:#F5E8C8;text-transform:uppercase;line-height:0.92;margin-bottom:16px;">Savanna<br>Capsule.</h2>
+      <p class="font-satoshi text-[15px] text-[#C4A35A]/60 max-w-[44ch] mb-8">Inspired by the African savanna. Earthy tones, organic textures, and the raw spirit of the wild. Limited edition.</p>
+      <span class="btn-pill" style="background:#6B5A34;color:#F5E8C8;border:1px solid rgba(196,163,90,0.2);">Shop Collection →</span>
+    </div>
+  </div>
+
+  <!-- Card 3: Essentials -->
+  <div class="collection-card" onclick="window.location.href='men.html'">
+    <div style="position:absolute;inset:0;background:#F5F5F5;"></div>
+    <div style="position:absolute;inset:0;background-image:url('./images/puma-jungle.png');background-size:cover;background-position:center;opacity:0.12;"></div>
+    <div class="card-overlay" style="background:linear-gradient(to top,rgba(245,245,245,0.95) 0%,rgba(245,245,245,0.3) 100%);"></div>
+    <div class="card-content">
+      <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-4">03 — Everyday</p>
+      <h2 style="font-family:'Anton',sans-serif;font-size:clamp(48px,8vw,100px);color:#0A0A0A;text-transform:uppercase;line-height:0.92;margin-bottom:16px;">The<br>Essentials.</h2>
+      <p class="font-satoshi text-[15px] text-[#6B6B6B] max-w-[44ch] mb-8">Pared-back design for daily performance. Clean silhouettes, superior comfort. The foundation of every rotation.</p>
+      <span class="btn-pill btn-pill-dark">Shop Collection →</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- Footer -->
+<footer style="background:#0A0A0A;overflow:hidden;">
+  <div style="border-top:1px solid #1C1C1C;padding-top:clamp(72px,10vw,140px);" class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <p class="font-oswald text-[10px] tracking-[0.22em] uppercase text-[#2D5A1B] mb-6">Hungry For More — Since 1948</p>
+    <h2 style="font-family:'Anton',sans-serif;font-size:clamp(52px,10vw,148px);color:#fff;text-transform:uppercase;line-height:0.88;">Made<br>For The<br>Hunt.</h2>
+  </div>
+  <div style="padding-top:clamp(60px,7vw,96px);margin-bottom:64px;" class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div><h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Shop</h5><ul class="space-y-3"><li><a href="men.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Men</a></li><li><a href="women.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Women</a></li><li><a href="running.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Running</a></li><li><a href="collections.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Collections</a></li><li><a href="stories.html" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Stories</a></li></ul></div>
+      <div><h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Company</h5><ul class="space-y-3"><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">About PUMA</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Careers</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Sustainability</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Press Room</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Investors</a></li></ul></div>
+      <div><h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Support</h5><ul class="space-y-3"><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Track Order</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Returns &amp; Exchanges</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Size Guide</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">Contact Us</a></li><li><a href="#" class="font-satoshi text-[13px] text-[#5A5A5A] hover:text-white transition-colors">FAQ</a></li></ul></div>
+      <div><h5 class="font-satoshi font-medium text-[10px] tracking-[0.18em] uppercase text-[#3A3A3A] mb-5">Follow</h5><ul class="space-y-3"><li><a href="#" class="flex items-center gap-3 group"><span class="w-[32px] h-[32px] rounded-full border border-[#2A2A2A] flex items-center justify-center group-hover:border-[#2D5A1B] transition-colors"><svg width="14" height="14" fill="none" stroke="#5A5A5A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/></svg></span><span class="font-satoshi text-[13px] text-[#5A5A5A] group-hover:text-white transition-colors">Instagram</span></a></li><li><a href="#" class="flex items-center gap-3 group"><span class="w-[32px] h-[32px] rounded-full border border-[#2A2A2A] flex items-center justify-center group-hover:border-[#2D5A1B] transition-colors"><svg width="14" height="14" fill="none" stroke="#5A5A5A" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span><span class="font-satoshi text-[13px] text-[#5A5A5A] group-hover:text-white transition-colors">YouTube</span></a></li></ul></div>
+    </div>
+  </div>
+  <div style="border-top:1px solid #141414;padding:28px 0;" class="max-w-[1400px] mx-auto px-6 md:px-10"><div class="flex flex-col md:flex-row items-center justify-between gap-4"><img src="./assets/puma-logo-png-26.webp" alt="" class="h-[22px] brightness-0 invert opacity-25" onerror="this.outerHTML='<span style=font-family:Anton;font-size:16px;color:rgba(255,255,255,0.25)>PUMA</span>';"><div class="flex flex-wrap items-center gap-2"><a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50">Privacy Policy</a><span class="text-[#1E1E1E]">·</span><a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50">Terms of Service</a><span class="text-[#1E1E1E]">·</span><a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50">Cookie Settings</a><span class="text-[#1E1E1E]">·</span><a href="#" class="font-satoshi text-[11px] text-[#3A3A3A] hover:text-white/50">Accessibility</a></div><span class="font-satoshi text-[11px] text-[#3A3A3A]">© 2026 PUMA SE · 🇮🇳 India</span></div></div>
+</footer>
+
+<!-- Cart / Size / Search -->
+<div id="cart-overlay"></div>
+<div id="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping bag"><div class="cart-header"><div class="flex items-center gap-3"><svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg><span class="font-satoshi font-medium text-[13px] text-white tracking-[0.08em] uppercase">Bag (<span id="cart-count">0</span>)</span></div><button id="cart-close" class="text-white/60 hover:text-white transition-colors" aria-label="Close bag"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><div id="cart-items"></div><div id="cart-empty"><svg width="64" height="64" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg><p class="font-satoshi text-[16px] text-white/50">Your bag is empty</p><p class="font-satoshi text-[13px] text-white/25">Add something worth hunting for</p></div><div id="cart-footer" style="display:none;"><div class="flex items-center justify-between mb-4"><span class="font-satoshi font-medium text-[14px] text-white/60 uppercase tracking-[0.08em]">Subtotal</span><span id="cart-subtotal" class="font-oswald font-bold text-[22px] text-white">₹0</span></div><button id="checkout-btn" class="w-full btn-pill btn-pill-green py-4 text-[13px]">Checkout</button><p class="font-satoshi text-[10px] text-white/25 text-center mt-3">Taxes and shipping calculated at checkout</p></div></div>
+<div id="size-overlay"></div>
+<div id="size-sheet" role="dialog" aria-modal="true" aria-label="Select size"><div class="flex items-center justify-between mb-6"><div><h3 id="size-sheet-name" class="font-satoshi font-bold text-[17px] text-white"></h3><p id="size-sheet-color" class="font-satoshi text-[13px] text-white/50"></p></div><button id="size-close" class="text-white/60 hover:text-white transition-colors" aria-label="Close size selector"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><p class="font-satoshi font-medium text-[10px] tracking-[0.14em] uppercase text-white/40 mb-4">Select UK Size</p><div id="size-grid" class="grid grid-cols-4 gap-2 mb-6"></div><button id="size-confirm" class="w-full btn-pill btn-pill-green py-4 text-[13px] opacity-30 pointer-events-none" disabled>Add to Bag</button></div>
+<div id="search-overlay"></div>
+<div id="search-panel" role="dialog" aria-modal="true" aria-label="Search products"><div class="flex items-center gap-4 max-w-[900px] mx-auto"><svg width="24" height="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg><input id="search-input" type="text" placeholder="Search..." aria-label="Search products"><button id="search-close" class="text-white/60 hover:text-white transition-colors" aria-label="Close search"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><div id="search-results" class="flex flex-wrap gap-3 mt-6 max-w-[900px] mx-auto"></div></div>
+
+<script>
+(function(){
+'use strict';
+const PRODUCTS={obsidian:{id:'obsidian',name:'Nitro Elite Speed',color:'Obsidian Black / Gold',price:14999,img:'./images/shoe_obsidian_black.png'},arctic:{id:'arctic',name:'Nitro Elite Speed',color:'Arctic White / Ice',price:14999,img:'./images/shoe_arctic_white.png'},savanna:{id:'savanna',name:'Nitro Elite Speed',color:'Savanna Gold / Earth',price:14999,img:'./images/shoe_savanna_gold.png'}};
+const SIZES=['UK 5','UK 6','UK 7','UK 8','UK 9','UK 10','UK 11','UK 12'];
+let cart=[],pendingProductId=null,selectedSize=null;
+const cartBadge=document.getElementById('cart-badge'),cartCount=document.getElementById('cart-count'),cartOverlay=document.getElementById('cart-overlay'),cartDrawer=document.getElementById('cart-drawer'),cartItemsEl=document.getElementById('cart-items'),cartEmpty=document.getElementById('cart-empty'),cartFooter=document.getElementById('cart-footer'),cartSubtotal=document.getElementById('cart-subtotal'),sizeOverlay=document.getElementById('size-overlay'),sizeSheet=document.getElementById('size-sheet'),sizeGrid=document.getElementById('size-grid'),sizeConfirm=document.getElementById('size-confirm'),searchOverlay=document.getElementById('search-overlay'),searchPanel=document.getElementById('search-panel'),searchInput=document.getElementById('search-input'),searchResults=document.getElementById('search-results');
+document.getElementById('hamburger').addEventListener('click',function(){const o=this.classList.toggle('active');document.getElementById('mobile-nav-overlay').classList.toggle('open',o);document.getElementById('mobile-nav-overlay').setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';});
+function renderCart(){const c=cart.reduce((a,b)=>a+b.qty,0);cartCount.textContent=c;cartBadge.textContent=c;cartBadge.style.display=c>0?'flex':'none';if(!cart.length){cartItemsEl.innerHTML='';cartEmpty.style.display='flex';cartFooter.style.display='none';return;}cartEmpty.style.display='none';cartFooter.style.display='block';let h='';cart.forEach(i=>{h+='<div class="cart-item"><div class="cart-item-img"><img src="'+i.img+'" alt="'+i.name+'"></div><div class="flex-1"><p class="font-satoshi font-bold text-[14px] text-white mb-1">'+i.name+'</p><p class="font-satoshi text-[12px] text-white/40 mb-1">'+i.color+'</p><p class="font-satoshi text-[11px] text-white/40 mb-3">Size: '+i.size+'</p><div class="flex items-center gap-3"><button class="qty-btn qty-minus" data-item-id="'+i.id+'">−</button><span class="font-satoshi text-[13px] text-white w-6 text-center">'+i.qty+'</span><button class="qty-btn qty-plus" data-item-id="'+i.id+'">+</button></div></div><div class="flex flex-col items-end justify-between"><button class="cart-remove text-white/30 hover:text-white" data-item-id="'+i.id+'"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button><span class="font-oswald font-bold text-[16px] text-white">₹'+(i.price*i.qty).toLocaleString('en-IN')+'</span></div></div>';});cartItemsEl.innerHTML=h;cartSubtotal.textContent='₹'+cart.reduce((a,b)=>a+b.price*b.qty,0).toLocaleString('en-IN');cartItemsEl.querySelectorAll('.qty-minus').forEach(b=>b.addEventListener('click',()=>changeQty(b.dataset.itemId,-1)));cartItemsEl.querySelectorAll('.qty-plus').forEach(b=>b.addEventListener('click',()=>changeQty(b.dataset.itemId,1)));cartItemsEl.querySelectorAll('.cart-remove').forEach(b=>b.addEventListener('click',()=>removeFromCart(b.dataset.itemId)));}
+function addToCart(pid,size){const p=PRODUCTS[pid];if(!p)return;const iid=pid+'_'+size.replace(/\s/g,'');const ex=cart.find(c=>c.id===iid);if(ex)ex.qty++;else cart.push({id:iid,productId:pid,name:p.name,color:p.color,price:p.price,img:p.img,size:size,qty:1});renderCart();openCart();}
+function removeFromCart(iid){cart=cart.filter(c=>c.id!==iid);renderCart();}
+function changeQty(iid,d){const i=cart.find(c=>c.id===iid);if(!i)return;i.qty+=d;if(i.qty<=0){removeFromCart(iid);return;}renderCart();}
+function openCart(){cartOverlay.classList.add('open');cartDrawer.classList.add('open');document.body.style.overflow='hidden';}
+function closeCart(){cartOverlay.classList.remove('open');cartDrawer.classList.remove('open');document.body.style.overflow='';}
+function openSizeSheet(pid){pendingProductId=pid;selectedSize=null;const p=PRODUCTS[pid];if(!p)return;document.getElementById('size-sheet-name').textContent=p.name;document.getElementById('size-sheet-color').textContent=p.color;sizeGrid.innerHTML='';SIZES.forEach(s=>{const b=document.createElement('button');b.className='size-btn';b.textContent=s;b.addEventListener('click',()=>{sizeGrid.querySelectorAll('.size-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selectedSize=s;sizeConfirm.style.opacity='1';sizeConfirm.style.pointerEvents='auto';sizeConfirm.disabled=false;});sizeGrid.appendChild(b);});sizeConfirm.style.opacity='0.3';sizeConfirm.style.pointerEvents='none';sizeConfirm.disabled=true;sizeOverlay.classList.add('open');sizeSheet.classList.add('open');}
+function closeSizeSheet(){sizeOverlay.classList.remove('open');sizeSheet.classList.remove('open');}
+function openSearch(){searchOverlay.classList.add('open');searchPanel.classList.add('open');searchInput.value='';searchResults.innerHTML='';setTimeout(()=>searchInput.focus(),400);}
+function closeSearch(){searchOverlay.classList.remove('open');searchPanel.classList.remove('open');}
+sizeConfirm.addEventListener('click',()=>{if(pendingProductId&&selectedSize){addToCart(pendingProductId,selectedSize);closeSizeSheet();}});
+document.getElementById('cart-btn').addEventListener('click',openCart);document.getElementById('cart-close').addEventListener('click',closeCart);cartOverlay.addEventListener('click',closeCart);
+document.getElementById('size-close').addEventListener('click',closeSizeSheet);sizeOverlay.addEventListener('click',closeSizeSheet);
+document.getElementById('search-btn').addEventListener('click',openSearch);document.getElementById('search-close').addEventListener('click',closeSearch);searchOverlay.addEventListener('click',closeSearch);
+searchInput.addEventListener('input',function(){const q=this.value.toLowerCase();if(!q){searchResults.innerHTML='';return;}let h='';Object.values(PRODUCTS).forEach(p=>{if(p.name.toLowerCase().includes(q)||p.color.toLowerCase().includes(q)){h+='<div class="search-result-card" data-product-id="'+p.id+'"><div style="width:52px;height:52px;background:#222;border-radius:6px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="'+p.img+'" style="width:100%;height:100%;object-fit:contain;"></div><div><p class="font-satoshi font-bold text-[14px] text-white">'+p.name+'</p><p class="font-satoshi text-[12px] text-white/40">'+p.color+'</p></div><span class="ml-auto font-satoshi font-medium text-[11px] text-[#2D5A1B] uppercase">+ Add</span></div>';}});searchResults.innerHTML=h||'<p class="font-satoshi text-[14px] text-white/30">No results found</p>';searchResults.querySelectorAll('.search-result-card').forEach(c=>c.addEventListener('click',()=>{closeSearch();openSizeSheet(c.dataset.productId);}));});
+document.getElementById('checkout-btn').addEventListener('click',()=>alert('Checkout coming soon!\n\nThis is a portfolio demo — no real transactions.'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeSizeSheet();closeSearch();}});
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){gsap.registerPlugin(ScrollTrigger);gsap.from('.collection-card',{opacity:0,y:60,stagger:0.25,duration:0.8,ease:'power2.out',scrollTrigger:{trigger:'#collections-grid',start:'top 80%'}});}
+renderCart();
+})();
+</script>
+</body>
+</html>
